@@ -1,13 +1,8 @@
 <template>
-    <div class="home-page">
-        <h1> {{ title }} </h1>
-        <img src="../assets/ep-artwork.jpg" alt="">
-        <div class="music-links">
-            <a target="_blank" :href="links.spotify">Spotify</a> |
-            <a target="_blank" :href="links.bandcamp">Bandcamp</a> |
-            <a target="_blank" :href="links.itunes">Itunes</a> |
-            <a target="_blank" :href="links.soundcloud">Soundcloud</a>
-        </div>
+    <div class="home-section">
+        <h1 v-html="title"></h1>
+        <p>Available now</p>
+        <router-link to="/blog" class="button">Continue to Main site</router-link>
     </div>
 </template>
 
@@ -16,50 +11,48 @@ export default {
   name: 'Home',
   data () {
     return {
-        title: 'An Empty Space Between',
-        links: {
-            spotify: 'http://spotify.com',
-            bandcamp: 'http://bandcamp.com',
-            itunes: 'http://itunes.com',
-            soundcloud: 'http://soundcloud.com'
-        }
-        // albumArt: '../assets/ep-artwork.jpg'
+        title: 'EMPTY SPACE<br>BETWEEN EP'
     }
+  },
+  mounted() {
+      intro()
   }
 }
+
+function intro() {
+    let tl = new TimelineMax()
+    let ease = 'Power1.easeOut'
+    tl.to('.home-section h1', 1, {autoAlpha:1, ease})
+    tl.to('.home-section p', 1, {autoAlpha:1, ease})
+    tl.to('.home-section .button', 1, {autoAlpha:1, ease})
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h1, h2 {
-    font-weight: bold;
-    color: #fff;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-img {
-    width: 290px;
-    margin: 40px 0;
-}
-
-.music-links {
-    color: #FFF;
-    a {
-        color: #FFF;
-        text-decoration: none;
-        font-style: italic;
-        &:hover {
-            color: #e2e2e2;
-        }
+@import url('https://fonts.googleapis.com/css?family=Shadows+Into+Light');
+.home-section {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    display: inline-block;
+    width: 370px;
+    height: 351px;
+    h1 {
+        font-family: 'Shadows Into Light', cursive;
+        font-size: 4em;
+        margin: 0 auto;
     }
+    p {
+        font-family: 'Open Sans', sans-serif;
+        padding: 1em 0 2em;
+        margin: 0;
+        text-align: center;
+    }
+    h1, p, .button  {
+        opacity: 0;
+    }
+    text-align: center;
 }
 </style>

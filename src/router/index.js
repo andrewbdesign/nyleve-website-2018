@@ -8,7 +8,7 @@ import Blog from '@/components/Blog'
 import Bio from '@/components/Bio'
 import Epk from '@/components/Epk'
 import CreateBlogPost from '@/components/BlogCreator'
-import ComingSoon from '@/components/ComingSoon'
+import Videos from '@/components/Videos'
 import NotFoundPage from '@/components/NotFoundPage'
 
 Vue.use(Router)
@@ -17,47 +17,42 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Home',
             component: Home
         },
         {
             path: '/listen',
-            name: 'Listen',
             component: Listen
         },
         {
             path: '/buy',
-            name: 'Buy',
             component: Buy
         },
         {
             path: '/contact',
-            name: 'Contact',
             component: Contact
         },
         {
             path: '/blog',
-            name: 'Blog',
             component: Blog
         },
         {
             path: '/blog/create',
-            name: 'Create',
             component: CreateBlogPost
         },
         {
             path: '/bio',
-            name: 'Bio',
             component: Bio
+        },
+        {   path: '/videos',
+            component: Videos
         },
         {
             path: '/epk',
-            name: 'EPK',
             component: Epk
         },
         {   path: '*',
-            name: '404 Page',
             component: NotFoundPage
-        }
+        },
+
     ]
 })

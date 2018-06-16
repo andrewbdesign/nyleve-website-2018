@@ -1,13 +1,12 @@
 <template>
     <div class="nav">
         <div class="menu-container">
-            <router-link to="/">NYLEVE</router-link>
-            <!-- <router-link to="/">Home</router-link> -->
-            <router-link to="/listen">Listen</router-link>
-            <router-link to="/buy">Buy</router-link>
-            <router-link to="/contact">Contact</router-link>
-            <router-link to="/blog">News / Blog</router-link>
-            <router-link to="/bio">Bio</router-link>
+            <router-link to="/blog">NYLEVE</router-link>
+            <router-link to="/listen">LISTEN</router-link>
+            <router-link to="/videos">VIDEOS</router-link>
+            <router-link to="/bio">BIO</router-link>
+            <router-link to="/buy">BUY</router-link>
+            <router-link to="/contact">CONTACT</router-link>
         </div>
     </div>
 </template>
@@ -17,7 +16,7 @@
         name: 'Home',
         data() {
             return {
-                title: 'Home'
+                // title: 'Home'
             }
         }
     }
@@ -25,18 +24,7 @@
 
 <style scoped lang="scss">
 .nav {
-    position: fixed;
-    width: 30%;
-    left: 0;
-    top: 0;
-    height: 100%;
     .menu-container {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        margin: auto;
-        width: 60%;
-        height: 250px;
-        text-align: left;
         :first-child {
             font-size: 2em;
             font-weight: bold;
@@ -44,7 +32,7 @@
         }
         a {
             font-weight: normal;
-            color: #FFF;
+            color: #000;
             display: block;
             text-decoration: none;
             font-size: .9em;

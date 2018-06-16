@@ -1,18 +1,33 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import Vuex from 'vuex'
+
+import normalize from 'normalize.css'
+import bulma from 'bulma'
+import firebase from 'firebase'
+
 import Nav from '@/components/shared/Nav'
-import VueFire from 'vuefire'
+Vue.component('app-nav', Nav)
+Vue.use(Vuex)
 
 Vue.config.productionTip = false
-
-Vue.use(VueFire)
-
-Vue.component('app-nav', Nav)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  normalize,
+  bulma,
   router,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBq-FuhtF7Kaq-JExoRBssmvMTtI1Nd6hU",
+      authDomain: "nyleve-music-56656.firebaseapp.com",
+      databaseURL: "https://nyleve-music-56656.firebaseio.com",
+      projectId: "nyleve-music-56656",
+      storageBucket: "nyleve-music-56656.appspot.com",
+      messagingSenderId: "48969799072"
+    })
+  }
 })

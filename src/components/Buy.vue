@@ -1,23 +1,28 @@
 <template lang="html">
-    <div class="buy-page">
-        <h1>Buy my EP now!</h1>
-        <div class="work-container">
-
-            <div class="title">
-                <h3> {{ title }} </h3>
-                <img src="../assets/ep-artwork.jpg" alt="">
+    <div class="container main-container">
+        <div class="columns">
+            <div class="column is-one-quarter">
+                <app-nav></app-nav>
             </div>
+            <div class="column">
+                <h1>Buy my EP now!</h1>
+                <div class="work-container">
+                    <div class="title">
+                        <h3> {{ title }} </h3>
+                        <img src="../assets/ep-artwork.jpg" alt="">
+                    </div>
 
-            <div class="cta-section">
-                <h3>Tracklist:</h3>
-                <ol>
-                    <li v-for="track in tracks"> {{ track.track }} </li>
-                </ol>
-                <button id="cta-button" type="button" name="button">buy now</button>
+                    <div class="cta-section">
+                        <h3>Tracklist:</h3>
+                        <ol>
+                            <li v-for="track in tracks"> {{ track.track }} </li>
+                        </ol>
+                        <button id="cta-button" type="button" name="button">buy now</button>
+                    </div>
+                </div>
             </div>
         </div>
-
-    </div>
+  </div>
 </template>
 
 <script>

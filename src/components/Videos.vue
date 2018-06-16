@@ -5,8 +5,8 @@
                 <app-nav></app-nav>
             </div>
             <div class="column">
-                <h1>Page not found.</h1>
-                <router-link to="/blog">Click here to go home?</router-link>
+                <h1>Videos</h1>
+                
             </div>
         </div>
   </div>
