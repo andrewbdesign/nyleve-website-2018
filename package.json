@@ -6,9 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "start": "npm run dev",
-    "build": "node build/build.js",
-    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
+    "start": "node server.js",
+    "build": "node build/build.js"
   },
   "dependencies": {
     "bulma": "^0.7.1",
