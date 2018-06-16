@@ -7,17 +7,15 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "npm run dev",
-    "build": "node build/dev-server.js",
+    "build": "node build/build.js",
     "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "bulma": "^0.7.1",
     "firebase": "^4.13.1",
-    "gsap": "^2.0.1",
     "normalize.css": "^8.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuefire": "^1.4.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -60,8 +58,8 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": "8.11.2",
-    "npm": "6.1.0"
+    "node": ">= 4.0.0",
+    "npm": ">= 3.0.0"
   },
   "browserslist": [
     "> 1%",

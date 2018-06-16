@@ -37,7 +37,7 @@
                 <span @click="showBody" v-if="!isShowingFullBody">Read more.</span>
 
                 <div v-if="isShowingFullBody">
-                  <p v-for="paragraph in paragraphs"> {{ paragraph.paragraph }} </p>
+                  <!-- <p v-for="paragraph in paragraphs"> {{ paragraph.paragraph }} </p> -->
                 </div>
               </div>
 
@@ -150,7 +150,6 @@ h3 {
 .artwork {
   width: 30%;
   display: inline-block;
-  float: left;
   img {
     width: 100%;
     margin-top: 0;
@@ -204,10 +203,6 @@ h3 {
     top: -50px;
 }
 
-/* 16x9 Aspect Ratio */
-.intrinsic-container-16x9 {
-    // padding-bottom: 56.25%;
-}
 
 /* 4x3 Aspect Ratio */
 .intrinsic-container-4x3 {
