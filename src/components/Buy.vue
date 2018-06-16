@@ -5,19 +5,18 @@
                 <app-nav></app-nav>
             </div>
             <div class="column">
-                <h1>Buy my EP now!</h1>
+                <h1>Buy my EP</h1>
+                <p>{{ title }}</p>
+                <img src="../assets/ep-artwork.jpg" alt="">
+            </div>
+            <div class="column">
                 <div class="work-container">
-                    <div class="title">
-                        <h3> {{ title }} </h3>
-                        <img src="../assets/ep-artwork.jpg" alt="">
-                    </div>
-
                     <div class="cta-section">
-                        <h3>Tracklist:</h3>
-                        <ol>
-                            <li v-for="track in tracks"> {{ track.track }} </li>
-                        </ol>
-                        <button id="cta-button" type="button" name="button">buy now</button>
+                        <h1>Tracklist:</h1>
+                        <template v-for="(track, index) in tracks">
+                            <p> {{index + 1}}. {{ track.track }}</p>
+                        </template>
+                        <button id="cta-button" class="button" type="button" name="button" @click="clickBuy">buy now</button>
                     </div>
                 </div>
             </div>
@@ -27,6 +26,11 @@
 
 <script>
 export default {
+    methods: {
+        clickBuy() {
+            window.open('https://www.google.com/')
+        }
+    },
     data() {
         return {
             title: 'An Empty Space Between',
@@ -40,51 +44,20 @@ export default {
                 {track: 'And So On'}
             ]
         }
-    },
-    mounted() {
-        var ctaBtn = document.getElementById('cta-button')
-        ctaBtn.addEventListener('click', function(e) {
-            e.preventDefault()
-            window.open('http://google.com')
-        })
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .buy-page {
-        text-align: left;
-        .title {
-            position: relative;
-            width: 45%;
-            float: left;
-            margin-right: 5%;
-            img {
-                width: 100%;
-            }
-        }
-        .cta-section {
-            position: relative;
-            width: 50%;
-            float: left;
-            ol {
-                // list-style: none;
-                padding: 0 0 0 20px;
-            }
-            li {
-                // list-style:none;
-                padding-left:0;
-                // list-style-position: inside;
-            }
-        }
+    .work-container p {
+        margin-bottom: 0;
+    }
+    p {
+        margin-bottom: 20px;
     }
     button {
-        display: block;
         background: white;
-        border: none;
         color: #000;
-        width: 90px;
-        height: 30px;
         transition: background .1s ease-in, color .1s ease-in;
         cursor: pointer;
         &:hover {

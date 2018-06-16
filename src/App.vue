@@ -17,4 +17,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+h1 {
+    font-size: 2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 30px;
+}
+
 </style>

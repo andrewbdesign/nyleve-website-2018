@@ -5,7 +5,9 @@
                 <app-nav></app-nav>
             </div>
             <div class="column">
-                <a target="_blank" :href="facebook">Facebook</a> | <a target="_blank" :href="youtube">Youtube</a>
+                <h1>Contact</h1>
+                <p>Want me to perform for ya? Drop us a line</p>
+                <a target="_blank" :href="facebook">Facebook</a> | <a target="_blank" :href="youtube">Youtube</a> |
                 <a class="email" href="mailto:nyleve@gmail.com"> {{ email }} </a>
             </div>
         </div>
@@ -19,7 +21,7 @@ export default {
         return {
             facebook: 'https://www.facebook.com',
             youtube: 'https://www.youtube.com',
-            email: 'Nyleve@gmail.com'
+            email: 'nyleve@gmail.com'
         }
     }
 }

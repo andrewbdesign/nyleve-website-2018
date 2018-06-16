@@ -25,6 +25,7 @@
 <style scoped lang="scss">
 .nav {
     .menu-container {
+        position: fixed;
         :first-child {
             font-size: 2em;
             font-weight: bold;

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex'
-
+import { store } from './store'
 import normalize from 'normalize.css'
 import bulma from 'bulma'
 import firebase from 'firebase'
@@ -19,6 +19,7 @@ new Vue({
   normalize,
   bulma,
   router,
+  store,
   render: h => h(App),
   created() {
     firebase.initializeApp({
