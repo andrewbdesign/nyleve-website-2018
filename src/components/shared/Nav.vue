@@ -2,11 +2,12 @@
     <div class="nav">
         <div class="menu-container">
             <router-link to="/blog">NYLEVE</router-link>
-            <router-link to="/listen">LISTEN</router-link>
-            <router-link to="/videos">VIDEOS</router-link>
-            <router-link to="/bio">BIO</router-link>
-            <router-link to="/buy">BUY</router-link>
-            <router-link to="/contact">CONTACT</router-link>
+            <router-link to="/blog">News / Blog</router-link>
+            <router-link to="/bio">Bio</router-link>
+            <router-link to="/listen">Listen</router-link>
+            <router-link to="/videos">Videos</router-link>
+            <router-link to="/buy">Buy</router-link>
+            <router-link to="/contact">Contact</router-link>
         </div>
     </div>
 </template>
@@ -22,7 +23,10 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.main-container {
+    margin-top: 70px;
+}
 .nav {
     .menu-container {
         position: fixed;

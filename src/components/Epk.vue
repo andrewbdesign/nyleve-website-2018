@@ -1,6 +1,6 @@
 <template>
     <div class="home-page">
-        <h1> {{ title }} </h1>
+        <h1>EPK</h1>
         <div class="press-shot-crop" :style="{ 'background-image': 'url(' + pressCoverImage + ')' }"></div>
         <div class="body-epk">
           <div class="download-links">Download a high-resolution (PRINT) press shot <a :href="printShot" target="_blank">HERE</a> <div class="divider">|</div> <br class="download-br"> Download a high-resolution (WEB) press shot <a :href="webShot" target="_blank">HERE</a> </div>
@@ -25,10 +25,7 @@
               </div>
 
         </div>
-        <!-- <div class="intrinsic-container intrinsic-container-16x9"> -->
-          <!-- <iframe src="https://open.spotify.com/embed/album/3qzmmmRmVBiOuMvrerfW4z" frameborder="0" allowtransparency="true"></iframe> -->
-          <iframe width="100%" height="450" scrolling="yes" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/359882759%3Fsecret_token%3Ds-C7uUO&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
-        <!-- </div> -->
+        <iframe width="100%" height="450" scrolling="yes" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/359882759%3Fsecret_token%3Ds-C7uUO&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
 
         <div class="body-epk epk-02">
               <div class="container">

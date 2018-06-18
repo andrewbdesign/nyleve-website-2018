@@ -1,7 +1,7 @@
 <template>
     <div class="home-section">
         <h1 v-html="title"></h1>
-        <p>Available now</p>
+        <p>EP Available now</p>
         <router-link to="/blog" class="button">Continue to Main site</router-link>
     </div>
 </template>
@@ -31,6 +31,7 @@ function intro() {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Shadows+Into+Light');
+@import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700');
 .home-section {
     position: absolute;
     top: 0; bottom: 0; left: 0; right: 0;

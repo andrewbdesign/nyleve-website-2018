@@ -6,19 +6,13 @@
             </div>
             <div class="column">
                 <h1>Buy my EP</h1>
-                <p>{{ title }}</p>
-                <img src="../assets/ep-artwork.jpg" alt="">
-            </div>
-            <div class="column">
-                <div class="work-container">
-                    <div class="cta-section">
-                        <h1>Tracklist:</h1>
-                        <template v-for="(track, index) in tracks">
-                            <p> {{index + 1}}. {{ track.track }}</p>
-                        </template>
-                        <button id="cta-button" class="button" type="button" name="button" @click="clickBuy">buy now</button>
-                    </div>
-                </div>
+                <template v-for="album in albums">
+                    <h2>{{ album.title }}</h2>
+                    <img :src="album.image" alt="">
+                    <template v-for="(track, index) in album.tracks">
+                        <p> {{index + 1}}. {{ track.track }}</p>
+                    </template>
+                </template>
             </div>
         </div>
   </div>
@@ -26,23 +20,14 @@
 
 <script>
 export default {
+    computed: {
+        albums() {
+            return this.$store.getters.albums
+        }
+    },
     methods: {
         clickBuy() {
             window.open('https://www.google.com/')
-        }
-    },
-    data() {
-        return {
-            title: 'An Empty Space Between',
-            albumArt: 'http://via.placeholder.com/350x350',
-            tracks: [
-                {track: 'As It So Happens'},
-                {track: 'An Empty Space Between'},
-                {track: 'Lately & Afterwards'},
-                {track: 'Again & Again'},
-                {track: 'Lindfield'},
-                {track: 'And So On'}
-            ]
         }
     }
 }
@@ -51,9 +36,6 @@ export default {
 <style lang="scss" scoped>
     .work-container p {
         margin-bottom: 0;
-    }
-    p {
-        margin-bottom: 20px;
     }
     button {
         background: white;

@@ -4,10 +4,9 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column video-page">
+            <div class="column is-half video-page">
                 <h1>Videos</h1>
-                <template v-for="video in videos">
-                    <p>{{ video.title }}</p>
+                <template v-for="video in videos.slice().reverse()">
                     <div class="resp-container">
                         <iframe class="resp-iframe" :src="video.url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
@@ -18,30 +17,18 @@
 </template>
 
 <script>
-/* 
 
-<iframe width="1425" height="595" src="https://www.youtube.com/embed/ZXWCbZdrkUM?list=PLktkeEq-ZD5fjyq-F8CVTR812Z6LlMRvm" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-*/
 export default {
-    data() {
-        return {
-            videos: [
-                {title: 'D\'Angelo - Unititled (How Does It Feel)', url: 'https://www.youtube.com/embed/SxVNOnPyvIU'},
-                {title: 'Lucie,Too - Lucky (Official Music Video)', url: 'https://www.youtube.com/embed/gHsUaS9r5R8'},
-                {title: 'Just The Two Of Us - Band Geeks Jamming with Hanan Rubinstein', url: 'https://www.youtube.com/embed/ZXWCbZdrkUM'},
-            ]
-        }
+    computed: {
+        videos() { return this.$store.getters.videos }
     }
 }
 </script>
 
 <style lang="scss" scoped>
     .video-page {
-        padding-bottom: 4em;
+        margin-bottom: 4em;
     }
-    // iframe {
-    //     width: 100%;
-    // }
     p {
         margin: 30px 0 10px;
     }
@@ -49,6 +36,7 @@ export default {
         position: relative;
         overflow: hidden;
         padding-top: 56.25%;
+        margin-bottom: 2em;
         .resp-iframe {
             position: absolute;
             top: 0;

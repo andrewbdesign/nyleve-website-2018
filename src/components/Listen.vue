@@ -4,11 +4,15 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column">
-                <h1>Have a listen why don't ya?</h1>
-                <div class="intrinsic-container intrinsic-container-16x9">
-                    <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/359882759%3Fsecret_token%3Ds-C7uUO&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
-                </div>
+            <div class="column is-half">
+                <h1>Listen</h1>
+                <template v-for="work in works">
+                    <hr>
+                    <p>{{ work.title }}</p>
+                    <div class="resp-container">
+                        <iframe class="resp-iframe" :src="work.url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </template>
             </div>
         </div>
   </div>
@@ -16,37 +20,39 @@
 
 <script>
 export default {
+    computed: {
+        works() { return this.$store.getters.works }
+    }
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 h1 {
     margin-bottom: 0;
 }
-.intrinsic-container {
+
+p {
+    margin-bottom: 20px;
+}
+
+hr {
+    background: #000;
+    height: 1px;
+}
+
+.resp-container {
     position: relative;
-    height: 0;
     overflow: hidden;
-    width: 100%;
-    height: 400px;
+    padding-top: 56.25%;
+    margin-bottom: 2em;
+    .resp-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
 }
 
-/* 16x9 Aspect Ratio */
-.intrinsic-container-16x9 {
-    padding-bottom: 56.25%;
-}
-
-/* 4x3 Aspect Ratio */
-.intrinsic-container-4x3 {
-    padding-bottom: 75%;
-}
-
-.intrinsic-container iframe {
-    position: absolute;
-    margin-top: 50px;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 400px;
-}
 </style>
