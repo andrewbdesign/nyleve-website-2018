@@ -48,12 +48,10 @@ export const store = new Vuex.Store({
         ],
         // 6. EPK
         epk: {
-            coverImage: 'http://via.placeholder.com/350x350',
-            lowRes: 'http://via.placeholder.com/350x350',
-            heightRes: 'http://via.placeholder.com/350x350',
-
             title: 'EPK',
-            
+            coverImage: 'http://via.placeholder.com/350x350',
+            lowRes: 'http://via.placeholder.com/300x300',
+            highRes: 'http://via.placeholder.com/600x600',
             showcaseAlbum: {
                 title: 'An Empty Space Between (EP) 2018',
                 description: 'Singer-Songwriter, Alternative, Art-rock, Electronic, Folk',
@@ -67,11 +65,7 @@ export const store = new Vuex.Store({
                     {track: 'And So On'}
                 ]
             },
-
             iframeSongs: 'https://open.spotify.com/embed/album/0gSmTwEd1wJS1v1lbFWZDv',
-
-            bio: 'Sydney singer-songwriter, producer, multi-instrumentalist\nStarting off solely as a singer, Nyleve began to experiment with songwriting and production to craft heavily layered pieces that blends acoustic guitars and ethereal electronic textures with melancholic melodies and unconventional structures. His Musical Influences range from Steve Reich, Radiohead, Jeff Buckley, D’angelo and Ryuichi Sakamoto.\nAs a Self taught musician, Nyleve has relied on his inspirations and his intuition to guide him towards learning how to write and record music. After creating a string of fragmented works under numerous monikers he has released his debut EP ‘An Empty Space Between’ in 2017 under his name.\nNyleve’s debut EP An Empty Space Between was recorded & mixed in its entirety in his bedroom in between long bouts of self-imposed isolation. During these contemplative moments away from an overwhelmingly noisy and overly connected world he dives into himself to explore themes of loneliness, helplessness, depression, escapism, lost love, disconnectedness, loss, grief and being okay with that. Months later he has finally come out of the trenches to share his otherworldly songs.\nHe is currently preparing for live shows to promote his newly released EP.',
-
             facebook: 'https://www.facebook.com/nylevemusic/',
             soundcloud: 'https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO',
         }
@@ -97,6 +91,9 @@ export const store = new Vuex.Store({
         },
         bio(state) {
             return state.bio.body
+        },
+        epk(state) {
+            return state.epk
         }
     }
 })

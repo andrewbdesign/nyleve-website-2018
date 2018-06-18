@@ -1,40 +1,40 @@
 <template>
     <div class="home-page">
-        <h1>EPK</h1>
-        <div class="press-shot-crop" :style="{ 'background-image': 'url(' + pressCoverImage + ')' }"></div>
+        <h1>{{epk.title}}</h1>
+        <div class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }"></div>
         <div class="body-epk">
-          <div class="download-links">Download a high-resolution (PRINT) press shot <a :href="printShot" target="_blank">HERE</a> <div class="divider">|</div> <br class="download-br"> Download a high-resolution (WEB) press shot <a :href="webShot" target="_blank">HERE</a> </div>
+          <div class="download-links">Download a high-resolution (PRINT) press shot <a :href="epk.highRes" target="_blank">HERE</a> <div class="divider">|</div> <br class="download-br"> Download a high-resolution (WEB) press shot <a :href="epk.lowRes" target="_blank">HERE</a> </div>
 
               <div class="container">
                 <h3>Latest Release</h3>
                 <div class="artwork">
-                  <img src="../assets/ep-artwork.jpg" alt="">
+                  <img :src="epk.showcaseAlbum.image" alt="">
                 </div>
                 <div class="description">
-                  <h1> {{ articleTitle }} </h1>
-                  <p> {{ articleBody }} </p>
-                  <!-- <div class="music-links">
-                      <a target="_blank" :href="links.spotify">Spotify</a> |
-                      <a target="_blank" :href="links.bandcamp">Bandcamp</a> |
-                      <a target="_blank" :href="links.itunes">Itunes</a> |
-                      <a target="_blank" :href="links.soundcloud">Soundcloud</a>
-                  </div> -->
+                  <h1> {{ epk.showcaseAlbum.title }} </h1>
+                  <p> {{ epk.showcaseAlbum.description }} </p>
+                  <template v-for="(track, index) in epk.showcaseAlbum.tracks">
+                    <p>{{index + 1}}. {{track.track}}</p>
+                  </template>
                 </div>
-
-                <div class="clear"></div>
+                <div class="clear"></div> <!-- do i need this -->
               </div>
 
         </div>
-        <iframe width="100%" height="450" scrolling="yes" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/359882759%3Fsecret_token%3Ds-C7uUO&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
+
+        <iframe width="100%" height="450" scrolling="yes" frameborder="no" :src="epk.iframeSongs"></iframe>
 
         <div class="body-epk epk-02">
               <div class="container">
-                <h3> {{ bioTitle }} </h3>
-                <p> {{ bioIntro }} </p>
+                <h3> Nyleve Bio </h3>
+                <p> {{paragraphs[0]}} </p>
                 <span @click="showBody" v-if="!isShowingFullBody">Read more.</span>
 
                 <div v-if="isShowingFullBody">
-                  <!-- <p v-for="paragraph in paragraphs"> {{ paragraph.paragraph }} </p> -->
+                  <template v-for="(paragraph, index) in sliceItems(1)">
+                    <p v-if="paragraphs[index]">{{paragraphs[index + 1]}}</p>
+                  </template>
+
                 </div>
               </div>
 
@@ -45,30 +45,26 @@
 
 <script>
 export default {
-  name: 'EPK',
+  computed: {
+    epk() { return this.$store.getters.epk },
+    paragraphs() {
+      var bodyCopy = this.$store.getters.bio 
+          bodyCopy = bodyCopy.split(/[\r\n]+/g)
+      return bodyCopy
+    }
+  },
   data () {
     return {
-        title: 'EPK',
-        articleTitle: epk.title,
-        articleBody: epk.body,
-        bioTitle: epk.bioTitle,
-        bioIntro: epk.bioIntro,
-        printShot: epk.printPhotoShot,
-        webShot: epk.webPhotoShot,
-        pressCoverImage: epk.coverShot,
-        links: {
-            spotify: 'http://spotify.com',
-            bandcamp: 'http://bandcamp.com',
-            itunes: 'http://itunes.com',
-            soundcloud: 'http://soundcloud.com'
-        },
-        paragraphs: epk.paragraphs,
         isShowingFullBody: false
     }
   },
   methods: {
     showBody() {
       this.isShowingFullBody = true
+    },
+    sliceItems(start) {
+      var endIs = this.paragraphs.length
+      return this.paragraphs.slice(start, endIs);
     }
   }
 }
@@ -78,7 +74,7 @@ export default {
 <style scoped lang="scss">
 h1, h2 {
     font-weight: bold;
-    color: #fff;
+    color: #000;
 }
 
 ul {
@@ -112,7 +108,6 @@ img {
 }
 
 .press-shot-crop {
-  // background-image: url('../assets/ep-artwork.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
