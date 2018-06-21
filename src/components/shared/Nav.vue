@@ -8,16 +8,33 @@
             <router-link to="/videos">Videos</router-link>
             <router-link to="/buy">Buy</router-link>
             <router-link to="/contact">Contact</router-link>
+            
+            <!-- USER LOGIN -->
+            <template v-if="userIsAuthenticated">
+                <hr>
+                <p>Welcome</p>
+                <router-link to="/blog/create">Create Post</router-link>
+                <router-link to="/blog/create">Edit EPK</router-link>
+                <router-link to="/blog/create">Add Music</router-link>
+                <button @click="signOut">Sign out</button>
+            </template>
+
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Home',
-        data() {
-            return {
-                // title: 'Home'
+        methods: {
+            signOut() {
+                this.$store.dispatch('logout')
+                this.$router.push('/')
+                localStorage.clear();
+            }
+        },
+        computed: {
+            userIsAuthenticated() {
+                return this.$store.getters.user !== null && this.$store.getters.user !== undefined
             }
         }
     }

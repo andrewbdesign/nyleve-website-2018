@@ -5,26 +5,24 @@
                 <app-nav></app-nav>
             </div>
             <div class="column is-half blog-container">
-                <h1>Blog</h1>
+                <h1>Edit Bio</h1>
                 <hr>
-                <div class="entry" v-for="blog in blogs.slice().reverse()">
-                    <h2>{{ blog.title }}</h2>
-                    <p class="date">{{ blog.date }}</p>
-                    <img :src="blog.image" v-if="blog.image">
-                    <p>{{blog.copy}}</p>
-                    <hr>
-                </div>
+                <textarea></textarea>
             </div>
         </div>
-  </div>
+    </div>
 </template>
 
 <script>
-
 export default {
     computed: {
-        blogs() {
-            return this.$store.getters.blogs
+        bio() {
+            return this.$store.getters.bio
+        }
+    },
+    data() {
+        return {
+            // maincopy: this.bio 
         }
     }
 }
@@ -41,9 +39,6 @@ export default {
         }
         img {
             width: 100%;
-        }
-        p {
-            margin-top: .75em;
         }
     }
     .date {

@@ -14,6 +14,25 @@
                     </div>
                 </template>
             </div>
+            <div class="column editor-video" v-if="userIsAuthenticated">
+                <h2>Add video</h2>
+                <form autocomplete="off" id="form" @submit.prevent="addSong">
+                    <label for="title">Title</label>
+                    <input id="title" type="text" v-model="title">
+
+                    <label for="url">iframe URL</label>
+                    <input id="url" type="text" v-model="url">
+                    <input type="submit" class="button" :disabled="!formIsValid"></button>
+                </form>
+                <hr>
+                <h2>Preview</h2>
+                <p>{{ title }}</p>
+                <template v-if="url">
+                    <div class="resp-container">
+                        <iframe class="resp-iframe" :src="url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </template>
+            </div>
         </div>
   </div>
 </template>
@@ -21,12 +40,41 @@
 <script>
 export default {
     computed: {
-        works() { return this.$store.getters.works }
+        works() { return this.$store.getters.works },
+        formIsValid() { return this.title !== '' || this.url !== '' },
+        userIsAuthenticated() { return this.$store.getters.user !== null && this.$store.getters.user !== undefined }
+    },
+    data() {
+        return {
+            title: '',
+            url: ''
+        }
+    },
+    methods: {
+        addSong() {
+            let songObj = {
+                url: this.url,
+                title: this.title
+            }
+            this.$store.dispatch('addSong', songObj)
+            this.url = ''
+            this.title = ''
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.editor-video {
+    input[type='text'] {
+        width: 100%;
+        display: block;
+    }
+    input {
+        margin-bottom: 20px;
+    }
+}
 h1 {
     margin-bottom: 0;
 }

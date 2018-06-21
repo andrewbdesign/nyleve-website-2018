@@ -27,8 +27,19 @@ new Vue({
       authDomain: "nyleve-music-56656.firebaseapp.com",
       databaseURL: "https://nyleve-music-56656.firebaseio.com",
       projectId: "nyleve-music-56656",
-      storageBucket: "nyleve-music-56656.appspot.com",
+      storageBucket: "gs://nyleve-music-56656.appspot.com",
       messagingSenderId: "48969799072"
+    })
+    this.$store.dispatch('loadPosts')
+    this.$store.dispatch('loadVideos')
+    this.$store.dispatch('loadSongs')
+    this.$store.dispatch('loadBio')
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // this.$store.dispatch('autoSignin', user)
+        // this.$store.dispatch('loadUserInfo')
+        // redirect to home page
+      }
     })
   }
 })

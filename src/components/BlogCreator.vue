@@ -1,145 +1,164 @@
 <template lang="html">
-    <div class="blog-container">
-        <h1>News / Blog</h1>
-        <div class="article-container">
-
-          <!-- <div class="">
-            <p>Add blog entry here</p>
-            <div class="">
-              <form id="form"class="" v-on:submit.prevent="addArticle">
-                <br>
-                <label for="articleTitle">Title:</label>
-                <br>
-                <input type="text" id="articleTitle" v-model="newArticle.title">
-
-                <br>
-                <label for="articleAuthor">Author:</label>
-                <br>
-                <input type="text" id="articleAuthor" v-model="newArticle.author">
-
-                <br>
-                <label for="articleBody">Body:</label>
-                <br>
-                <textarea type="text" id="articleBody" v-model="newArticle.body"></textarea>
-
-                <br>
-                <label for="articleDate">Date:</label>
-                <br>
-                <input type="text" id="articleDate" v-model="newArticle.date">
-                <br>
-                <input type="submit" name="" value="Add article">
-
-              </form>
+  <div class="container main-container">
+        <div class="columns">
+            <div class="column is-one-quarter">
+                <app-nav></app-nav>
+            </div>
+            <div class="column is-two-quarters">
+                <h1>Create new post</h1>
+                <form autocomplete="off" id="form" @submit.prevent="submitPost">
+                    <label for="title">Title</label>
+                    <input id="title" type="text" v-model="blogPost.title">
+                    
+                    <label for="date">Date (it is {{ todaysDate }})</label>
+                    <input id="date" type="text" v-model="blogPost.date">
+                    
+                    <label for="body">Copy</label>
+                    <textarea id="body" v-model="blogPost.copy"></textarea>
+                    
+                    <label for="image">Image (optional)</label>
+                    <button class="button img-btn" @click="onPickFile">Upload Image</button>
+                    <input 
+                        type="file" 
+                        style="display: none" 
+                        ref="fileInput" 
+                        accept="image/*"
+                        @change="onFilePicked">
+                    
+                    <input type="submit" class="button" :disabled="!formIsValid">Upload new post</button>
+                </form>
             </div>
 
+            <div class="column blog-container">
+                <h3>Preview</h3>
+                <div class="entry">
+                    <h2>{{ blogPost.title }}</h2>
+                    <p class="date">{{ blogPost.date }}</p>
+                    <img :src="blogPost.image" v-if="blogPost.image" width="100%">
+                    <template v-for="(copy, index) in bio">
+                        <p v-html="bio[index]"></p>
+                    </template>
+                </div>
+            </div>
 
-          </div> -->
-
-            <!-- <div v-for="article in articles" class="article-entry"> -->
-            <!-- <div v-for="article in reverseItems" class="article-entry">
-              <h1 class="title">{{article.title}}</h1>
-              <p class="author">{{article.author}}</p>
-              <p class="body">{{article.body}}</p>
-              <p class="date">{{article.date}}</p>
-              <p class="delete" v-on:click="removeArticle(article)">DELETE</p>
-            </div> -->
         </div>
-    </div>
+  </div>
 </template>
 
 <script>
+const dateIs = new Date(); 
+const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const todaysDate = `${month[dateIs.getMonth()]} ${dateIs.getDate()}, ${dateIs.getFullYear()}`
 
-// import Firebase from 'firebase'
-//
-// let config = {
-//   apiKey: "AIzaSyD7k1o0pDJYY4EpsbEM5FmsIBF-CZtZ3uM",
-//   authDomain: "nyleve-music.firebaseapp.com",
-//   databaseURL: "https://nyleve-music.firebaseio.com",
-//   projectId: "nyleve-music",
-//   storageBucket: "nyleve-music.appspot.com",
-//   messagingSenderId: "84839106934"
-// }
-
-// let app = Firebase.initializeApp(config)
-// let db = app.database();
-//
-// let articleRef = db.ref('articles')
 
 export default {
-  // firebase: {
-  //   articles: articleRef
-  // },
-  // data () {
-  //   return {
-  //     newArticle: {
-  //       title: '',
-  //       body: '',
-  //       author: '',
-  //       date: ''
-  //     }
-  //   }
-  // },
-  // methods: {
-  //   addArticle() {
-  //     articleRef.push(this.newArticle)
-  //     this.newArticle.title = ''
-  //     this.newArticle.body = ''
-  //     this.newArticle.author = ''
-  //     this.newArticle.date = ''
-  //
-  //     console.log('articleRef', articleRef)
-  //   },
-  //   removeArticle(article) {
-  //     articleRef.child(article['.key']).remove()
-  //   }
-  // },
-  // computed: {
-  //   reverseItems() {
-  //     return this.articles.slice().reverse();
-  //   }
-  // }
+    data () {
+        return {
+            blogPost: {
+                title: '',
+                date: '',
+                copy: '',
+                image: '',
+            },
+            imageFile: null,
+            todaysDate: month[dateIs.getMonth()] + ' ' + dateIs.getDate() + ', ' + dateIs.getFullYear()
+        }
+    },
+    computed: {
+        formIsValid() {
+            return this.blogPost.title !== '' && 
+                   this.blogPost.date !== '' && 
+                   this.blogPost.copy !== ''
+        },
+        bio() { 
+            var bodyCopy = this.blogPost.copy
+            bodyCopy = bodyCopy.split(/[\r\n]+/g)
+            return bodyCopy
+        }
 
+    },
+    methods: {
+        onFilePicked(e) {
+            const files = e.target.files
+            let filename = files[0].name
+            if (filename.lastIndexOf('.') <= 0) {
+                return alert('Please add a valid image')
+            }
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.blogPost.image = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
+            this.imageFile = files[0]
+        },
+        onPickFile(e) {
+            e.preventDefault()
+            this.$refs.fileInput.click()
+        },
+        submitPost() {
+            let newPost = {
+                title: this.blogPost.title,
+                date: this.blogPost.date,
+                copy: this.blogPost.copy,
+                image: this.imageFile
+            }
+            this.$store.dispatch('createPost', newPost)
+            this.blogPost.title = ''
+            this.blogPost.date = ''
+            this.blogPost.copy = ''
+            this.imageFile = null
+            this.$router.push('/blog')
+        }
+    }
 }
-
-// console.log('articleRef', articleRef)
 </script>
 
 <style lang="scss" scoped>
-.blog-container {
-    margin-top: 70px;
-}
-h1, p {
-    text-align: left;
-    margin: 0;
+input, textarea {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #e2e2e2;
+    padding: 5px;
 }
 
-.article-container {
-    height: 100%;
-    margin: auto;
-    text-align: left;
-    background: rgba(255,255,255,0.1);
-    padding: 50px 26px;
-    line-height: 1.5;
-    margin-top: 30px;
-    padding-bottom: 0;
+.img-btn {
+    display: block;
     margin-bottom: 30px;
-    h1 {
-        margin: 0;
-        font-size: 1.2em;
-        margin-bottom: 10px;
+}
+
+textarea {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 150px;
+}
+
+.blog-container {
+    background: #f4f4f4;
+    h3 {
+        font-size: 30px;
     }
-    p.date {
-        font-style: italic;
-        font-size: .8em;
-        margin-bottom: 50px;
+    .entry {
+        h2 {
+            font-size: 2em;
+            font-weight: 700;
+        }
+        img {
+            width: 100%;
+        }
+        p {
+            margin-top: .75em;
+        }
     }
-    p.content {
-        font-size: .9em;
-        line-height: 1.8;
+    .date {
+        font-size: 0.8em;
         margin-bottom: 60px;
+        font-style: italic;
     }
     hr {
-        margin-bottom: 40px;
+        background: #000;
+        height: 1px;
+        margin: 80px 0 40px;
     }
 }
+
 </style>

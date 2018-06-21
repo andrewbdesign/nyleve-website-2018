@@ -12,6 +12,21 @@
                     </div>
                 </template>
             </div>
+            <div class="column editor-video" v-if="userIsAuthenticated">
+                <h2>Add video</h2>
+                <form autocomplete="off" id="form" @submit.prevent="submitPost">
+                    <label for="title">Video link</label>
+                    <input id="title" type="text" v-model="videoLink">
+                    <input type="submit" class="button" :disabled="!formIsValid"></button>
+                </form>
+                <hr>
+                <h2>Preview</h2>
+                <template v-if="videoLink">
+                    <div class="resp-container">
+                        <iframe class="resp-iframe" :src="videoLink" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </template>
+            </div>
         </div>
   </div>
 </template>
@@ -20,12 +35,37 @@
 
 export default {
     computed: {
-        videos() { return this.$store.getters.videos }
+        videos() { return this.$store.getters.videos },
+        formIsValid() { return this.videoLink !== '' },
+        userIsAuthenticated() { return this.$store.getters.user !== null && this.$store.getters.user !== undefined }
+    },
+    data() {
+        return {
+            videoLink: ''
+        }
+    },
+    methods: {
+        submitPost() {
+            let videoObj = {
+                url: this.videoLink
+            }
+            this.$store.dispatch('addVideo', videoObj)
+            this.videoLink = ''
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+    .editor-video {
+        input[type='text'] {
+            width: 100%;
+            display: block;
+        }
+        input {
+            margin-bottom: 20px;
+        }
+    }
     .video-page {
         margin-bottom: 4em;
     }
