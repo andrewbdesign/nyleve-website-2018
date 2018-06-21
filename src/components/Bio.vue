@@ -7,7 +7,7 @@
             <div v-if="!isEditing" class="column is-half">
                 <h1>BIO</h1><span v-if="userIsAuthenticated" @click="editBio" class="edit-btn button">Edit</span>
                 <template v-for="bio in bio.split('\n')">
-                    <p> {{ bio }} </p>
+                    <p v-html="bio"></p>
                 </template>
             </div>
             <div v-if="isEditing">

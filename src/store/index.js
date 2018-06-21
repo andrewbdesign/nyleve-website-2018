@@ -130,14 +130,14 @@ export const store = new Vuex.Store({
             }
             let imageUrl
             let key
-            let hasNoImage = payload.image !== null || payload.image !== undefined
+            let hasNoImage = payload.image !== null
             firebase.database().ref('blogs').push(newPost)
                 .then(data => {
                     key = data.key
                     return key
                 })
                 .then(key => {
-                    if (hasNoImage) {
+                    if (!hasNoImage) {
                         return key
                     }
                     const filename = payload.image.name
@@ -145,7 +145,7 @@ export const store = new Vuex.Store({
                     return firebase.storage().ref('blogs/' + key + '.' + ext).put(payload.image)
                 })
                 .then(fileData => {
-                    if (hasNoImage) {
+                    if (!hasNoImage) {
                         return key
                     }
                     imageUrl = fileData.metadata.downloadURLs[0]
@@ -153,7 +153,7 @@ export const store = new Vuex.Store({
                 })
                 .then(() => {
                     let newObj
-                    if (hasNoImage) {
+                    if (!hasNoImage) {
                         newObj = {
                             ...newPost,
                             image: '',
