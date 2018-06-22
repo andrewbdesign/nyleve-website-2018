@@ -353,6 +353,54 @@ export const store = new Vuex.Store({
                     console.log(error)
                 })
         },
+        updateSong({commit}, payload) {
+            const songId = payload.id
+            const songObj = {
+                url: payload.url,
+                title: payload.title
+            }
+            firebase.database().ref('works/' + songId).set(songObj)
+                .then(() => {
+                    return firebase.database().ref('works').once('value')
+                })
+                .then(data => {
+                    const songList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        songList.push({
+                            id: key,
+                            url: obj[key].url,
+                            title: obj[key].title
+                        })
+                    }
+                    commit('setLoadedSongs', songList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        deleteSong({commit}, payload) {
+            const songId = payload.id
+            firebase.database().ref('works/' + songId).remove()
+                .then(() => {
+                    return firebase.database().ref('works').once('value')
+                })
+                .then(data => {
+                    const songList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        songList.push({
+                            id: key,
+                            url: obj[key].url,
+                            title: obj[key].title
+                        })
+                    }
+                    commit('setLoadedSongs', songList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
         loadSongs({commit}) {
             firebase.database().ref('works').once('value')
                 .then(data => {

@@ -9,6 +9,8 @@
                 <template v-for="work in works">
                     <hr>
                     <p>{{ work.title }}</p>
+                    <span class="button" v-if="userIsAuthenticated" @click="editSong(work)">Edit</span>
+                    <span class="button" v-if="userIsAuthenticated" @click="deleteSong(work)">Delete</span>
                     <div class="resp-container">
                         <iframe class="resp-iframe" :src="work.url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
@@ -22,7 +24,14 @@
 
                     <label for="url">iframe URL</label>
                     <input id="url" type="text" v-model="url">
-                    <input type="submit" class="button" :disabled="!formIsValid"></button>
+                    
+                    <div v-if="isEditingSong">
+                        <span class="button" @click="cancelEditSong()">Cancel</span>
+                        <span class="button" @click="updateSong()">Update</span>
+                    </div>
+                    <div v-if="!isEditingSong">
+                        <input type="submit" class="button" :disabled="!formIsValid"></button>
+                    </div>
                 </form>
                 <hr>
                 <h2>Preview</h2>
@@ -47,10 +56,48 @@ export default {
     data() {
         return {
             title: '',
-            url: ''
+            url: '',
+            id: '',
+            isEditingSong: false
         }
     },
     methods: {
+        editSong(song) {
+            this.isEditingSong = true
+            this.title = song.title
+            this.url = song.url
+            this.id = song.id
+        },
+        cancelEditSong() {
+            this.isEditingSong = false
+            this.title = ''
+            this.url = ''
+            this.id = ''
+        },
+        updateSong() {
+            let songObj = {
+                url: this.url,
+                title: this.title,
+                id: this.id
+            }
+
+            this.$store.dispatch('updateSong', songObj)
+
+            this.isEditingSong = false
+            this.title = ''
+            this.url = ''
+            this.id = ''
+        },
+        deleteSong(song) {
+            let songObj = {
+                id: song.id
+            }
+            this.$store.dispatch('deleteSong', songObj)
+            this.isEditingSong = false
+            this.title = ''
+            this.url = ''
+            this.id = ''
+        },
         addSong() {
             let songObj = {
                 url: this.url,

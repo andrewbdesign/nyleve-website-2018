@@ -10,8 +10,8 @@
                     <h1>Blog</h1>
                     <hr>
                     <div class="entry" v-for="blog in blogs.slice().reverse()" :key="blog.id">
-                        <span class="button" @click="editPost(blog)">Edit</span>
-                        <span class="button" @click="deletePost(blog)">Delete</span>
+                        <span class="button" v-if="userIsAuthenticated" @click="editPost(blog)">Edit</span>
+                        <span class="button" v-if="userIsAuthenticated" @click="deletePost(blog)">Delete</span>
                         <h2>{{ blog.title }}</h2>
                         <p class="date">{{ blog.date }}</p>
                         <img :src="blog.image" v-if="blog.image">
@@ -71,6 +71,7 @@
 
 export default {
     computed: {
+        userIsAuthenticated() { return this.$store.getters.user !== null && this.$store.getters.user !== undefined },
         blogs() {
             return this.$store.getters.blogs
         },
