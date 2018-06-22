@@ -5,15 +5,63 @@
                 <app-nav></app-nav>
             </div>
             <div class="column is-half blog-container">
-                <h1>Blog</h1>
-                <hr>
-                <div class="entry" v-for="blog in blogs.slice().reverse()">
-                    <h2>{{ blog.title }}</h2>
-                    <p class="date">{{ blog.date }}</p>
-                    <img :src="blog.image" v-if="blog.image">
-                    <p>{{blog.copy}}</p>
+
+                <template v-if="!editingPost">
+                    <h1>Blog</h1>
                     <hr>
-                </div>
+                    <div class="entry" v-for="blog in blogs.slice().reverse()" :key="blog.id">
+                        <span class="button" @click="editPost(blog)">Edit</span>
+                        <span class="button" @click="deletePost(blog)">Delete</span>
+                        <h2>{{ blog.title }}</h2>
+                        <p class="date">{{ blog.date }}</p>
+                        <img :src="blog.image" v-if="blog.image">
+                        <template v-for="copy in blog.copy.split('\n')">
+                            <p> {{ copy }}</p>
+                        </template>
+                        <hr>
+                    </div>
+                </template>
+                <template v-if="editingPost">
+                    <div class="columns">
+                        <div class="column is-half">
+                            <h1>Edit post</h1>
+                            <form autocomplete="off" id="form" @submit.prevent="updatePost">
+                                <label for="title">Title</label>
+                                <input id="title" type="text" v-model="editBody.title">
+                                
+                                <label for="date">Date</label>
+                                <input id="date" type="text" v-model="editBody.date">
+                                
+                                <label for="body">Copy</label>
+                                <textarea id="body" v-model="editBody.copy"></textarea>
+                                
+                                <label for="image">Image (optional)</label>
+                                <button class="button img-btn" @click="onPickFile">Upload Image</button>
+                                <input 
+                                    type="file" 
+                                    style="display: none" 
+                                    ref="fileInput" 
+                                    accept="image/*"
+                                    @change="onFilePicked">
+                                
+                                <input type="submit" class="button" :disabled="!formIsValid">
+                                <span class="button" @click="cancelEditPost">Cancel</span>
+                            </form>
+                        </div>
+                        <div class="column blog-container">
+                            <h3>Preview</h3>
+                            <div class="entry">
+                                <h2>{{ editBody.title }}</h2>
+                                <p class="date">{{ editBody.date }}</p>
+                                <img :src="editBody.image" v-if="editBody.image" width="100%">
+                                <template v-for="copy in editBody.copy.split('\n')">
+                                    <p> {{ copy }}</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                
             </div>
         </div>
   </div>
@@ -25,6 +73,82 @@ export default {
     computed: {
         blogs() {
             return this.$store.getters.blogs
+        },
+        formIsValid() {
+            return this.editBody.title !== '' && 
+                   this.editBody.date !== '' && 
+                   this.editBody.copy !== ''
+        }
+    },
+    data() {
+        return {
+            editingPost: false,
+            editBody: {
+                title: '',
+                date: '',
+                copy: '',
+                id: '',
+                image: ''
+            },
+            imageFile: null
+        }
+    },
+    methods: {
+        cancelEditPost() {
+            this.editingPost = false
+
+            this.editBody.id = ''
+            this.editBody.title = ''
+            this.editBody.date = ''
+            this.editBody.copy = ''
+            this.editBody.image = ''
+        },
+        editPost(post) {
+            console.log('post', post)
+            this.editingPost = true
+
+            this.editBody.id = post.id
+            this.editBody.title = post.title
+            this.editBody.date = post.date
+            this.editBody.copy = post.copy
+            this.editBody.image = post.image
+        },
+        deletePost(post) {
+            console.log(post, 'post')
+            this.$store.dispatch('deletePost', post)
+        },
+        onFilePicked(e) {
+            const files = e.target.files
+            let filename = files[0].name
+            if (filename.lastIndexOf('.') <= 0) {
+                return alert('Please add a valid image')
+            }
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.editBody.image = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
+            this.imageFile = files[0]
+        },
+        onPickFile(e) {
+            e.preventDefault()
+            this.$refs.fileInput.click()
+        },
+        updatePost() {
+            let editPost = {
+                title: this.editBody.title,
+                date: this.editBody.date,
+                copy: this.editBody.copy,
+                image: this.imageFile,
+                id: this.editBody.id
+            }
+            this.$store.dispatch('updatePost', editPost)
+            this.editBody.title = ''
+            this.editBody.date = ''
+            this.editBody.copy = ''
+            this.imageFile = null
+            this.$router.push('/blog')
+            this.editingPost = false
         }
     }
 }
@@ -32,6 +156,18 @@ export default {
 </script>
 
 <style lang="scss">
+
+input, textarea {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #e2e2e2;
+    padding: 5px;
+}
+
+.img-btn {
+    display: block;
+    margin-bottom: 30px;
+}
 
 .blog-container {
     .entry {

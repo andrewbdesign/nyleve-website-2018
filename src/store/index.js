@@ -81,6 +81,105 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
+        updatePost({commit}, payload) {
+            let postId = payload.id
+            let postObj = {
+                title: payload.title,
+                date: payload.date,
+                copy: payload.copy,
+                image: payload.image
+            }
+
+            let imageUrl
+            let hasNoImage = payload.image !== null
+
+            if (!hasNoImage) {
+                firebase.database().ref('blogs/' + postId).set(postObj)
+                    .then(() => {
+                        return firebase.database().ref('blogs').once('value')
+                    })
+                    .then(data => {
+                        const blogPosts = []
+                        const obj = data.val()
+                        for(let key in obj) {
+                            blogPosts.push({
+                                id: key,
+                                title: obj[key].title,
+                                date: obj[key].date,
+                                copy: obj[key].copy,
+                                image: obj[key].image
+                            })
+                        }
+                        commit('setLoadedPosts', blogPosts)
+                    })
+                    .catch(error => {
+                        console.log('error has no image', error)
+                    })
+            } else {
+                const filename = payload.image.name
+                const ext = filename.slice(filename.lastIndexOf('.'))
+                firebase.storage().ref('blogs/' + postId + '.' + ext).put(payload.image)
+                    .then(fileData => {
+                        imageUrl = fileData.metadata.downloadURLs[0]
+                        postObj.image = imageUrl
+                        return firebase.database().ref('blogs').child(postId).update({image: imageUrl})
+                    })
+                    .then(() => {
+                        return firebase.database().ref('blogs').once('value')
+                    })
+                    .then(data => {
+                        const blogPosts = []
+                        const obj = data.val()
+                        for(let key in obj) {
+                            blogPosts.push({
+                                id: key,
+                                title: obj[key].title,
+                                date: obj[key].date,
+                                copy: obj[key].copy,
+                                image: obj[key].image
+                            })
+                        }
+                        commit('setLoadedPosts', blogPosts)
+                    })
+                    .catch(error => {
+                        console.log('error HAS image', error)
+                    })
+            }
+        },
+        deletePost({commit}, payload) {
+            let postId = payload.id
+            firebase.database().ref('blogs/' + postId).remove()
+                .then(() => {
+                    if (payload.image === '') {
+                        return
+                    } else {
+                        let res = payload.image.split(postId)
+                        let ext = res[1].split('?')[0]
+                        let fileName = postId + ext
+                        return firebase.storage().ref('blogs/' + fileName).delete()
+                    }
+                })
+                .then(() => {
+                    return firebase.database().ref('blogs').once('value')
+                })
+                .then(data => {
+                    const blogPosts = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        blogPosts.push({
+                            id: key,
+                            title: obj[key].title,
+                            date: obj[key].date,
+                            copy: obj[key].copy,
+                            image: obj[key].image
+                        })
+                    }
+                    commit('setLoadedPosts', blogPosts)
+                })
+                .catch(error => {
+                    console.log('error image', error)
+                })
+        },
         loadBio({commit}) {
             firebase.database().ref('bio').once('value')
                 .then(data => {
@@ -141,8 +240,9 @@ export const store = new Vuex.Store({
                         return key
                     }
                     const filename = payload.image.name
+                    console.log('filenameObj', payload.image)
                     const ext = filename.slice(filename.lastIndexOf('.'))
-                    return firebase.storage().ref('blogs/' + key + '.' + ext).put(payload.image)
+                    return firebase.storage().ref('blogs/' + key + ext).put(payload.image)
                 })
                 .then(fileData => {
                     if (!hasNoImage) {
