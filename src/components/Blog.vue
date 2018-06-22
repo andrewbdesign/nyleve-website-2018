@@ -104,17 +104,14 @@ export default {
             this.editBody.image = ''
         },
         editPost(post) {
-            console.log('post', post)
             this.editingPost = true
-
             this.editBody.id = post.id
             this.editBody.title = post.title
             this.editBody.date = post.date
             this.editBody.copy = post.copy
-            this.editBody.image = post.image
+            this.image = post.image
         },
         deletePost(post) {
-            console.log(post, 'post')
             this.$store.dispatch('deletePost', post)
         },
         onFilePicked(e) {
@@ -139,9 +136,13 @@ export default {
                 title: this.editBody.title,
                 date: this.editBody.date,
                 copy: this.editBody.copy,
-                image: this.imageFile,
                 id: this.editBody.id
             }
+
+            if (this.imageFile) {
+                editPost.image = this.imageFile
+            }
+            console.log('updating editPost', this.imageFile, 'then', editPost)
             this.$store.dispatch('updatePost', editPost)
             this.editBody.title = ''
             this.editBody.date = ''

@@ -240,7 +240,6 @@ export const store = new Vuex.Store({
                         return key
                     }
                     const filename = payload.image.name
-                    console.log('filenameObj', payload.image)
                     const ext = filename.slice(filename.lastIndexOf('.'))
                     return firebase.storage().ref('blogs/' + key + ext).put(payload.image)
                 })
@@ -267,6 +266,50 @@ export const store = new Vuex.Store({
                         }
                     }
                     commit('createPost', newObj)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        updateVideo({commit}, payload) {
+            let videoId = payload.id
+            let videoUrl = payload.url
+            firebase.database().ref('videos/' + videoId).set({url: videoUrl})
+                .then(() => {
+                    return firebase.database().ref('videos').once('value')
+                })
+                .then(data => {
+                    const videoList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        videoList.push({
+                            id: key,
+                            url: obj[key].url
+                        })
+                    }
+                    commit('setLoadedVideos', videoList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        deleteVideo({commit}, payload) {
+            const videoId = payload.id
+            firebase.database().ref('videos/' + videoId).remove()
+                .then(() => {
+                    console.log('video successfully removed')
+                    return firebase.database().ref('videos').once('value')
+                })
+                .then(data => {
+                    const videoList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        videoList.push({
+                            id: key,
+                            url: obj[key].url
+                        })
+                    }
+                    commit('setLoadedVideos', videoList)
                 })
                 .catch(error => {
                     console.log(error)
