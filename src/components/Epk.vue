@@ -2,12 +2,27 @@
 	<div class="container epk-container">
 		
 		<h1>EPK</h1>
-		<div class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
-			<button class="button">Update press cover shot</button>
+		<div v-if="!editingCoverImage" class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
+			<button class="button" @click="editCoverImage">Update press cover shot</button>
+		</div>
+
+		<div v-if="editingCoverImage">
+			<div class="press-shot-crop" :style="{ 'background-image': 'url(' + this.coverImagePreview + ')' }">
+				<h1>Preview</h1>
+			</div>
+			<button class="button img-btn" @click="onPickFile">Upload Cover Image</button>
+			<input 
+				type="file" 
+				style="display: none" 
+				ref="fileInput" 
+				accept="image/*"
+				@change="onFilePicked">
+			<button class="button">Save</button>
+			<button @click="cancelCoverImage" class="button">Cancel</button>
 		</div>
 		
 		<p class="img-download">Download a high-resolution (PRINT) press shot <a :href="epk.highRes" target="_blank">HERE</a> | Download a high-resolution (WEB) press shot <a :href="epk.lowRes" target="_blank">HERE</a> </p>
-		<button class="button" @click="editLinks">Update Links</button> <!-- v-if="userIsAuthenticated" -->
+		<button v-if="userIsAuthenticated" class="button" @click="editLinks">Update Links</button>
 		<div v-if="editingLowHighRes">
 			<form autocomplete="off" id="form" @submit.prevent>
 				
@@ -139,6 +154,9 @@ export default {
 			editingFrame: false,
 			editingLowHighRes: false,
 			editingTitleDesc: false,
+			editingCoverImage: false,
+			coverImagePreview: '',
+			coverImageFile: '',
 			iframeUrlPreview: '',
 			soundcloudLink: '',
 			facebookLink: '',
@@ -147,10 +165,45 @@ export default {
 			title: '',
 			description: '',
 			tracks: ''
-
 		}
 	},
 	methods: {
+		onFilePicked(e) {
+            const files = e.target.files
+            let filename = files[0].name
+            if (filename.lastIndexOf('.') <= 0) {
+                return alert('Please add a valid image')
+            }
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.coverImagePreview = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
+            this.coverImageFile = files[0]
+        },
+        onPickFile(e) {
+            e.preventDefault()
+            this.$refs.fileInput.click()
+        },
+		updateCoverImage() {
+			this.editingCoverImage = false
+			const coverImageObj = {}
+			if(this.title) {
+				coverImageObj.coverImage = this.coverImageFile
+			}
+			this.$store.dispatch('updateEpk', titleDescObj)
+		},
+		editCoverImage() {
+			this.editingCoverImage = true
+			console.log(this.$store.getters.epk.coverImage)
+			if (this.$store.getters.epk.coverImage) {
+				this.coverImagePreview = this.$store.getters.epk.coverImage
+			}
+		},
+		cancelCoverImage() {
+			this.editingCoverImage = false
+			this.coverImagePreview = ''
+		},
 		editTitleDesc() {
 			this.editingTitleDesc = true
 			if (this.$store.getters.epk.title) {
