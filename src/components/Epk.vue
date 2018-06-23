@@ -1,272 +1,311 @@
-<template>
-    <div class="home-page">
-        <h1>{{epk.title}}</h1>
-        <div class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }"></div>
-        <div class="body-epk">
-          <div class="download-links">Download a high-resolution (PRINT) press shot <a :href="epk.highRes" target="_blank">HERE</a> <div class="divider">|</div> <br class="download-br"> Download a high-resolution (WEB) press shot <a :href="epk.lowRes" target="_blank">HERE</a> </div>
+<template lang="html">
+	<div class="container epk-container">
+		
+		<h1>EPK</h1>
+		<div class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
+			<button class="button">Update press cover shot</button>
+		</div>
+		
+		<p class="img-download">Download a high-resolution (PRINT) press shot <a :href="epk.highRes" target="_blank">HERE</a> | Download a high-resolution (WEB) press shot <a :href="epk.lowRes" target="_blank">HERE</a> </p>
+		<button class="button" @click="editLinks">Update Links</button> <!-- v-if="userIsAuthenticated" -->
+		<div v-if="editingLowHighRes">
+			<form autocomplete="off" id="form" @submit.prevent>
+				
+				<label for="high-res">High Res (PRINT)</label>
+				<input id="high-res" type="text" v-model="highResLink">
 
-              <div class="container">
-                <h3>Latest Release</h3>
-                <div class="artwork">
-                  <img :src="epk.showcaseAlbum.image" alt="">
-                </div>
-                <div class="description">
-                  <h1> {{ epk.showcaseAlbum.title }} </h1>
-                  <p> {{ epk.showcaseAlbum.description }} </p>
-                  <template v-for="(track, index) in epk.showcaseAlbum.tracks">
-                    <p>{{index + 1}}. {{track.track}}</p>
-                  </template>
-                </div>
-                <div class="clear"></div> <!-- do i need this -->
-              </div>
+				<label for="low-res">Low Res (WEB)</label>
+				<input id="low-res" type="text" v-model="lowResLink">
+				
+				<p>SOCIAL LINKS</p>
+				<label for="soundcloud">Soundcloud</label>
+				<input id="soundcloud" type="text" v-model="soundcloudLink">
+				
+				<label for="facebook">Facebook</label>
+				<input id="facebook" type="text" v-model="facebookLink">
 
-        </div>
+				<input type="submit" @click="updateLinks" class="button" :disabled="!linksAreValid">
+				<span class="button" @click="cancelLinks">Cancel</span>
+			</form>
+		</div>
+		
+		<h2>Latest release</h2>
+		
+		<!-- Featured Work -->
+		<div class="columns">
+			<div class="column" >
+				<img v-if="epk.image" :src="epk.image">
+				<button class="button">Update Image</button>
+			</div>
+			<div class="column">
+				<div v-if="!editingTitleDesc">
+					<h3> {{ epk.title }} </h3>
+					<p> {{ epk.description }} </p>
+					<p v-for="(track, index) in epk.tracks.split('\n')">0{{index + 1}}. {{ track }}</p>
+					<button v-if="userIsAuthenticated" class="button" @click="editTitleDesc">Update copy</button>
+				</div>
+				<div v-if="editingTitleDesc">
+					<form autocomplete="off" id="title-desc-form" @submit.prevent>
+						<label for="title">Title</label>
+						<input id="title" type="text" v-model="title">
 
-        <iframe width="100%" height="450" scrolling="yes" frameborder="no" :src="epk.iframeSongs"></iframe>
+						<label for="description">Description</label>
+						<input id="description" type="text" v-model="description">
 
-        <div class="body-epk epk-02">
-              <div class="container">
-                <h3> Nyleve Bio </h3>
-                <p> {{paragraphs[0]}} </p>
-                <span @click="showBody" v-if="!isShowingFullBody">Read more.</span>
+						<label for="tracks">Tracks</label>
+						<textarea id="tracks" type="text" v-model="tracks"></textarea>
 
-                <div v-if="isShowingFullBody">
-                  <template v-for="(paragraph, index) in sliceItems(1)">
-                    <p v-if="paragraphs[index]">{{paragraphs[index + 1]}}</p>
-                  </template>
+						<input type="submit" @click="updateTitleDesc" class="button" :disabled="!titleDescAreValid">
+						<span class="button" @click="cancelTitleDesc">Cancel</span>
+					</form>
+				</div>
 
-                </div>
-              </div>
+			</div>
+		</div>
+		
+		<!-- IFRAME -->
+		<div class="columns">
+			<div class="column">
+				<div class="edit-iframe">
+					<span class="button" v-if="userIsAuthenticated" @click="editIframe">Edit Iframe</span>
+					<div v-if="editingFrame">
+						<form autocomplete="off" id="form" @submit.prevent="updateIframe">
+							<label for="iframe-url">iframe URL</label>
+							<input id="iframe-url" type="text" v-model="iframeUrlPreview">
+							<input type="submit" class="button" :disabled="!iframeIsValid">
+							<span class="button" @click="cancelEditPost">Cancel</span>
+						</form>
+						<div class="resp-container">
+							<iframe class="resp-iframe" :src="iframeUrlPreview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+						</div>
+					</div>
+				</div>
+				<div class="resp-container" v-if="!editingFrame">
+					<iframe class="resp-iframe" :src="iframeUrl.iframeSongs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+		
+		<!-- BIO -->
+		<div class="columns">
+			<div class="column bio-profile">
+				<h2>Nyleve Bio</h2>
+				
+				<p> {{ bio.split('\n')[0] }}</p>
+				<span class="button" @click="showBody" v-if="!isShowingFullBody">Show more</span>
+				<template v-if="isShowingFullBody">
+					<p v-for="(paragraph, index) in sliceItems(1)">{{ paragraph }}</p>
+				</template>
+				<p class="social-links">
+					<a :href="epk.facebook" target="_blank">Facebook</a> |
+					<a :href="epk.soundcloud" target="_blank">Soundcloud</a>
+				</p>
+			</div>
+		</div>
 
-        </div>
+		<hr>
 
-    </div>
+	</div>
 </template>
 
 <script>
 export default {
-  computed: {
-    epk() { return this.$store.getters.epk },
-    paragraphs() {
-      var bodyCopy = this.$store.getters.bio 
-          bodyCopy = bodyCopy.split(/[\r\n]+/g)
-      return bodyCopy
-    }
-  },
-  data () {
-    return {
-        isShowingFullBody: false
-    }
-  },
-  methods: {
-    showBody() {
-      this.isShowingFullBody = true
-    },
-    sliceItems(start) {
-      var endIs = this.paragraphs.length
-      return this.paragraphs.slice(start, endIs);
-    }
-  }
+	computed: {
+		epk() {
+			return this.$store.getters.epk
+		},
+		iframeUrl() {
+			return this.$store.getters.epk
+		},
+		bio() {
+			return this.$store.getters.bio
+		},
+		iframeIsValid() {
+			return this.iframeUrl !== ''
+		},
+		userIsAuthenticated() {
+			return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+		},
+		linksAreValid() {
+			return this.lowResLink !== '' && this.highResLink !== '' && this.facebookLink !== '' && this.soundcloudLink !== ''
+		},
+		titleDescAreValid() {
+			return this.title !== '' && this.description !== ''
+		}
+	},
+	data () {
+		return {
+			isShowingFullBody: false,
+			editingFrame: false,
+			editingLowHighRes: false,
+			editingTitleDesc: false,
+			iframeUrlPreview: '',
+			soundcloudLink: '',
+			facebookLink: '',
+			lowResLink: '',
+			highResLink: '',
+			title: '',
+			description: '',
+			tracks: ''
+
+		}
+	},
+	methods: {
+		editTitleDesc() {
+			this.editingTitleDesc = true
+			if (this.$store.getters.epk.title) {
+				this.title = this.$store.getters.epk.title
+			}
+			if (this.$store.getters.epk.description) {
+				this.description = this.$store.getters.epk.description
+			}
+			if (this.$store.getters.epk.tracks) {
+				this.tracks = this.$store.getters.epk.tracks
+			}
+		},
+		cancelTitleDesc() {
+			this.editingTitleDesc = false
+			this.title = ''
+			this.description = ''
+			this.tracks = ''
+		},
+		updateTitleDesc() {
+			this.editingTitleDesc = false
+			const titleDescObj = {}
+			if(this.title) {
+				titleDescObj.title = this.title
+			}
+			if(this.description) {
+				titleDescObj.description = this.description
+			}
+			if(this.tracks) {
+				titleDescObj.tracks = this.tracks
+			}
+			this.$store.dispatch('updateEpk', titleDescObj)
+		},
+		editLinks() {
+			this.editingLowHighRes = true
+			if (this.$store.getters.epk.lowRes) {
+				this.lowResLink = this.$store.getters.epk.lowRes
+			}
+			if (this.$store.getters.epk.highRes) {
+				this.highResLink = this.$store.getters.epk.highRes
+			}
+			if (this.$store.getters.epk.facebook) {
+				this.facebookLink = this.$store.getters.epk.facebook
+			}
+			if (this.$store.getters.epk.soundcloud) {
+				this.soundcloudLink = this.$store.getters.epk.soundcloud
+			}
+		},
+		cancelLinks() {
+			this.editingLowHighRes = false
+			this.lowResLink = ''
+			this.highResLink = ''
+			this.facebookLink = ''
+			this.soundcloudLink = ''
+		},
+		updateLinks() {
+			this.editingLowHighRes = false
+			const linksObj = {}
+			if(this.lowResLink) {
+				linksObj.lowRes = this.lowResLink
+			}
+			if(this.highResLink) {
+				linksObj.highRes = this.highResLink
+			}
+			if(this.facebookLink) {
+				linksObj.facebook = this.facebookLink
+			}
+			if(this.soundcloudLink) {
+				linksObj.soundcloud = this.soundcloudLink
+			}
+			this.$store.dispatch('updateEpk', linksObj)
+		},
+		updateIframe() {
+			this.editingFrame = false
+			const iframeObj = {
+				iframeSongs: this.iframeUrlPreview
+			}
+			this.$store.dispatch('updateEpk', iframeObj)
+		},
+		cancelEditPost() {
+			this.editingFrame = false
+			this.iframeUrlPreview = this.iframeUrl.iframeSongs
+		},
+		editIframe() {
+			this.editingFrame = true
+			this.iframeUrlPreview = this.iframeUrl.iframeSongs
+		},
+
+		showBody() {
+			this.isShowingFullBody = true
+    	},
+		sliceItems(start) {
+			var endIs = this.bio.split('\n').length
+			return this.bio.split('\n').slice(start, endIs);
+		}
+	}
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h1, h2 {
-    font-weight: bold;
-    color: #000;
+<style lang="scss" scoped>
+.epk-container {
+	input[type="text"], textarea {
+		width: 100%;
+		margin: 5px;
+	}
+	textarea {
+		height: 100px;
+	}
+	.button {
+		margin: 20px 0;
+	}
+	h1, .img-download{
+		text-align: center;
+	}
+	.img-download {
+		margin: 10px 0 20px;
+	}
+	.press-shot-crop {
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: cover;
+		width: 100%;
+		height: 282px;
+		position: relative;
+		.button {
+			position: absolute;
+			margin: auto;
+			left: 0;
+			bottom: 0;
+			margin: 0;
+		}
+	}
+	.press-shot-crop:hover button{
+		opacity: 1;
+	}
 }
-
-ul {
-  list-style-type: none;
-  padding: 0;
+.bio-profile {
+	p {
+		margin-bottom: 20px;
+	}
 }
-
-li {
-  display: inline-block;
-  margin: 0 10px;
+.social-links {
+	text-align: center;
 }
-
-img {
-    width: 290px;
-    margin: 40px 0;
-}
-.download-br {
-  display: none;
-}
-
-.music-links {
-    color: #FFF;
-    a {
-        color: #FFF;
-        text-decoration: none;
-        font-style: italic;
-        &:hover {
-            color: #e2e2e2;
-        }
-    }
-}
-
-.press-shot-crop {
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  width: 100%;
-  height: 282px;
-}
-.body-epk {
-  background: white;
-  width: 100%;
-  color: #000;
-  // height: 300px;
-}
-.download-links {
-  color: #000;
-  font-size: 10px;
-  padding: 10px 0;
-  a {
-    color: #FF0000;
-    text-decoration: none;
-  }
-}
-
-.container {
-  width: 90%;
-  margin: 0 auto;
-}
-
-h3 {
-  text-align: left;
-}
-
-.artwork {
-  width: 30%;
-  display: inline-block;
-  img {
-    width: 100%;
-    margin-top: 0;
-  }
-}
-.clear {
-  clear: both;
-}
-.title {
-  text-align: left;
-  width: 40%;
-  margin-left: 40px;
-}
-.description {
-  float: left;
-  width: 70%;
-  color: #000;
-  h1 {
-    color: #000;
-    font-size: 19px;
-    line-height: 0;
-    margin-bottom: 30px;
-    text-align: left;
-    padding: 0 20px;
-  }
-  p {
-    text-align: left;
-    line-height: 26px;
-    font-size: 13px;
-    padding: 0 20px;
-  }
-}
-.music-links {
-    color: #000;
-    a {
-        color: #000;
-        text-decoration: none;
-        font-style: italic;
-        &:hover {
-            color: #666;
-        }
-    }
-}
-
-.intrinsic-container {
+.resp-container {
     position: relative;
-    height: 0;
-    // overflow: hidden;
-    width: 100%;
-    height: 450px;
-    top: -50px;
-}
-
-
-/* 4x3 Aspect Ratio */
-.intrinsic-container-4x3 {
-    padding-bottom: 75%;
-}
-
-.intrinsic-container iframe {
-    position: absolute;
-    margin-top: 50px;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 450px;
-}
-.divider {
-  display: inline;
-}
-
-.epk-02 {
-  margin-top: -28px;
-  padding-bottom: 30px;
-  margin-bottom: 60px;
-  h3 {
-    padding-top: 30px;
-  }
-  p {
-    text-align: left;
-    line-height: 26px;
-    font-size: 13px;
-  }
-  span {
-    color: #ee0000;
-    text-align: right;
-    display: block;
-    cursor: pointer;
-    line-height: 26px;
-    font-size: 13px;
-  }
-}
-.description p,
-.epk-02 p {
-  margin: 0;
-  margin-bottom: 26px;
-}
-
-@media (max-width: 767px) {
-  .artwork {
-    width: 100%;
-  }
-  .body-epk {
-    .description {
-      width: 100%;
-      margin-bottom: 30px;
-      h1 {
+    overflow: hidden;
+    padding-top: 56.25%;
+    margin-bottom: 2em;
+    .resp-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-      }
+        height: 100%;
+        border: 0;
     }
-  }
-  .divider {
-    display: none;
-  }
-  .download-br {
-    display: block;
-  }
-  .download-links {
-    line-height: 23px;
-  }
 }
-
-// Soundclound
-.multiSounds__sound.sc-border-dark-bottom {
-  height: 238px !important;
-}
-
 </style>

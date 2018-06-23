@@ -14,9 +14,8 @@
                 <hr>
                 <p>Welcome</p>
                 <router-link to="/blog/create">Create Post</router-link>
-                <router-link to="/blog/create">Edit EPK</router-link>
-                <router-link to="/blog/create">Add Music</router-link>
-                <button @click="signOut">Sign out</button>
+                <router-link to="/epk">EPK</router-link>
+                <button class="button" @click="signOut">Sign out</button>
             </template>
 
         </div>

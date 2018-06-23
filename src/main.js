@@ -34,6 +34,7 @@ new Vue({
     this.$store.dispatch('loadVideos')
     this.$store.dispatch('loadSongs')
     this.$store.dispatch('loadBio')
+    this.$store.dispatch('loadEpk')
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // this.$store.dispatch('autoSignin', user)

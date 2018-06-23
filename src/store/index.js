@@ -14,43 +14,33 @@ export const store = new Vuex.Store({
         works: [],
         bio: {body: ''},
         // 5. Buy
-        albums: [
-            {
-                title: 'An Empty Space Between',
-                image: 'http://via.placeholder.com/350x350',
-                url: 'https://www.google.com/',
-                tracks: [
-                    {track: 'As It So Happens'},
-                    {track: 'An Empty Space Between'},
-                    {track: 'Lately & Afterwards'},
-                    {track: 'Again & Again'},
-                    {track: 'Lindfield'},
-                    {track: 'And So On'}
-                ]
-            }
-        ],
+        // albums: [
+            // {
+                // title: 'An Empty Space Between',
+                // image: 'http://via.placeholder.com/350x350',
+                // url: 'https://www.google.com/',
+                // tracks: [
+                //     {track: 'As It So Happens'},
+                //     {track: 'An Empty Space Between'},
+                //     {track: 'Lately & Afterwards'},
+                //     {track: 'Again & Again'},
+                //     {track: 'Lindfield'},
+                //     {track: 'And So On'}
+                // ]
+            // }
+        // ],
         // 6. EPK
         epk: {
-            title: 'EPK',
+            iframeSongs: '',
+            lowRes: '',
+            highRes: '',
+            title: '', 
+            description: '',
+            tracks: '',
+            facebook: '',
+            soundcloud: '',
             coverImage: 'http://via.placeholder.com/350x350',
-            lowRes: 'http://via.placeholder.com/300x300',
-            highRes: 'http://via.placeholder.com/600x600',
-            showcaseAlbum: {
-                title: 'An Empty Space Between (EP) 2018',
-                description: 'Singer-Songwriter, Alternative, Art-rock, Electronic, Folk',
-                image: 'http://via.placeholder.com/350x350',
-                tracks: [
-                    {track: 'As It So Happens'},
-                    {track: 'An Empty Space Between'},
-                    {track: 'Lately & Afterwards'},
-                    {track: 'Again & Again'},
-                    {track: 'Lindfield'},
-                    {track: 'And So On'}
-                ]
-            },
-            iframeSongs: 'https://open.spotify.com/embed/album/0gSmTwEd1wJS1v1lbFWZDv',
-            facebook: 'https://www.facebook.com/nylevemusic/',
-            soundcloud: 'https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO',
+            image: 'http://via.placeholder.com/350x350',
         },
         user: null
     },
@@ -78,6 +68,33 @@ export const store = new Vuex.Store({
         },
         updateBio(state, payload) {
             state.bio.body = payload
+        },
+        updateEpk(state, payload) {
+            if (payload.iframeSongs) {
+                state.epk.iframeSongs = payload.iframeSongs
+            }
+            if (payload.lowRes) {
+                state.epk.lowRes = payload.lowRes
+            }
+            if (payload.highRes) {
+                state.epk.highRes = payload.highRes
+            }
+            if (payload.title) {
+                state.epk.title = payload.title
+            }
+            if (payload.description) {
+                state.epk.description = payload.description
+            }
+            if (payload.tracks) {
+                state.epk.tracks = payload.tracks
+            }
+            if (payload.facebook) {
+                state.epk.facebook = payload.facebook
+            }
+            if (payload.soundcloud) {
+                state.epk.soundcloud = payload.soundcloud
+            }
+
         }
     },
     actions: {
@@ -180,6 +197,31 @@ export const store = new Vuex.Store({
                     console.log('error image', error)
                 })
         },
+        loadEpk({commit}) {
+            firebase.database().ref('epk').once('value')
+                .then(data => {
+                    const obj = data.val()
+                    commit('updateEpk', obj)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        updateEpk({commit}, payload) {
+            firebase.database().ref('epk').update(payload)
+                .then(() => {
+                    console.log('updated EPK!')
+                    console.log(payload)
+                    return firebase.database().ref('epk').once('value')
+                })
+                .then(data => {
+                    const obj = data.val()
+                    commit('updateEpk', obj)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
         loadBio({commit}) {
             firebase.database().ref('bio').once('value')
                 .then(data => {
@@ -191,6 +233,7 @@ export const store = new Vuex.Store({
                     console.log(error)
                 })
         },
+        
         updateBio({commit}, payload) {
             firebase.database().ref('bio').set({ body: payload.body })
                 .then(() => {
@@ -198,6 +241,9 @@ export const store = new Vuex.Store({
                         body: payload.body
                     }
                     commit('updateBio', bodyObj.body)
+                })
+                .catch(error => {
+                    console.log(error)
                 })
         },
         loadPosts({commit}) {
@@ -481,6 +527,9 @@ export const store = new Vuex.Store({
         }, 
         user(state) {
             return state.user
+        },
+        epk(state) {
+            return state.epk
         }
     }
 })
