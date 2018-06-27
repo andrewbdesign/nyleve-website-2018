@@ -4,11 +4,17 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column">
+            <div class="column is-half main-section">
                 <h1>Contact</h1>
-                <p>Want me to perform for ya? Drop us a line</p>
-                <a target="_blank" :href="facebook">Facebook</a> | <a target="_blank" :href="youtube">Youtube</a> |
-                <a class="email" href="mailto:nyleve@gmail.com"> {{ email }} </a>
+
+                <a target="_blank" :href="facebook">Facebook</a> 
+                | <a target="_blank" :href="youtube">Youtube</a> 
+                | <a target="_blank" :href="soundcloud">Soundcloud</a> 
+                | <a target="_blank" :href="bandcamp">Bandcamp</a> 
+                <!-- | <a target="_blank" :href="youtube">Spotify</a>  -->
+                <br>
+                <br>
+                <a class="email" href="mailto:nylevecontact@gmail.com"> {{ email }} </a>
             </div>
         </div>
     </div>
@@ -19,9 +25,12 @@
 export default {
     data() {
         return {
-            facebook: 'https://www.facebook.com',
-            youtube: 'https://www.youtube.com',
-            email: 'nyleve@gmail.com'
+            facebook: 'https://www.facebook.com/nylevemusic',
+            youtube: 'https://www.youtube.com/channel/UCCm0c2j0funJ0GmN493yj0Q?view_as=subscriber',
+            soundcloud: 'https://soundcloud.com/nylevemusic',
+            // spotify: 'https://soundcloud.com/nylevemusic',
+            bandcamp: 'https://nyleve.bandcamp.com/',
+            email: 'nylevecontact@gmail.com'
         }
     }
 }

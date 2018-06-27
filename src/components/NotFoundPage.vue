@@ -4,7 +4,7 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column">
+            <div class="column is-half main-section">
                 <h1>Page not found.</h1>
                 <router-link to="/blog">Click here to go home?</router-link>
             </div>

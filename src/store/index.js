@@ -13,23 +13,11 @@ export const store = new Vuex.Store({
         videos: [],
         works: [],
         bio: {body: ''},
-        // 5. Buy
-        // albums: [
-            // {
-                // title: 'An Empty Space Between',
-                // image: 'http://via.placeholder.com/350x350',
-                // url: 'https://www.google.com/',
-                // tracks: [
-                //     {track: 'As It So Happens'},
-                //     {track: 'An Empty Space Between'},
-                //     {track: 'Lately & Afterwards'},
-                //     {track: 'Again & Again'},
-                //     {track: 'Lindfield'},
-                //     {track: 'And So On'}
-                // ]
-            // }
-        // ],
-        // 6. EPK
+        tours: [
+            {title:'RSL', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'},
+            {title:'RSL2', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'},
+            {title:'RSL3', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'}
+        ],
         epk: {
             iframeSongs: '',
             lowRes: '',
@@ -208,19 +196,38 @@ export const store = new Vuex.Store({
                 })
         },
         updateEpk({commit}, payload) {
-            firebase.database().ref('epk').update(payload)
-                .then(() => {
-                    console.log('updated EPK!')
-                    console.log(payload)
-                    return firebase.database().ref('epk').once('value')
-                })
-                .then(data => {
-                    const obj = data.val()
-                    commit('updateEpk', obj)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+
+            // check if there is image. if not, do the below
+
+            let imageUrl
+            let hasImage = payload.image
+            console.log('hasImage:', hasImage) 
+
+            // }
+            if (payload.image) {
+                const filename = payload.coverImage
+                console.log('filename', filename)
+                // let ext = payload.coverImage
+                // ext = ext.slice(filename.lastIndexOf('.'))
+                // console.log('ext', ext)
+                // const ext = filename.slice(filename.lastIndexOf('.'))
+                // return firebase.storage().ref('blogs/' + key + ext).put(payload.image)
+            } else {
+                firebase.database().ref('epk').update(payload)
+                    .then(() => {
+                        console.log('updated EPK!')
+                        console.log(payload)
+                        return firebase.database().ref('epk').once('value')
+                    })
+                    .then(data => {
+                        const obj = data.val()
+                        commit('updateEpk', obj)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
+
         },
         loadBio({commit}) {
             firebase.database().ref('bio').once('value')
@@ -257,7 +264,8 @@ export const store = new Vuex.Store({
                             title: obj[key].title,
                             date: obj[key].date,
                             copy: obj[key].copy,
-                            image: obj[key].image
+                            image: obj[key].image,
+                            iframeUrl: obj[key].iframeUrl
                         })
                     }
                     commit('setLoadedPosts', blogPosts)
@@ -272,6 +280,7 @@ export const store = new Vuex.Store({
                 date: payload.date,
                 copy: payload.copy,
                 image: payload.image,
+                iframeUrl: payload.iframeUrl
             }
             let imageUrl
             let key
@@ -530,6 +539,9 @@ export const store = new Vuex.Store({
         },
         epk(state) {
             return state.epk
+        },
+        tours(state) {
+            return state.tours
         }
     }
 })

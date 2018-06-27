@@ -4,14 +4,14 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div v-if="!isEditing" class="column is-half">
+            <div v-if="!isEditing" class="column is-half main-section">
                 <h1>BIO</h1><span v-if="userIsAuthenticated" @click="editBio" class="edit-btn button">Edit</span>
                 <template v-for="bio in bio.split('\n')">
                     <p v-html="bio"></p>
                 </template>
             </div>
             <div v-if="isEditing">
-                <div class="column editor-bio">
+                <div class="column editor-bio main-section">
                     <h1>Edit Bio</h1>
                     <form autocomplete="off" id="form" @submit.prevent="updateBio">
                         <textarea id="bio-copy" v-model="bioCopy"></textarea>
@@ -19,7 +19,7 @@
                         <span class="button" @click="cancelUpdate">Cancel</span>
                     </form>
                 </div>
-                <div class="column">
+                <div class="column editor-section">
                     <h1>Preview</h1>
                     <p v-for="bio in bioCopy.split('\n')"> {{ bio }} </p>
                 </div>

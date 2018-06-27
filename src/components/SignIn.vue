@@ -4,7 +4,7 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column is-half">
+            <div class="column is-half main-section">
                 <h1>Sign In</h1>
                 <form id="form" @submit.prevent="signIn">
                     <label for="email">Email</label>
@@ -68,5 +68,6 @@ input, textarea {
 }
 .login-btn {
     width: initial;
+    line-height: 0;
 }
 </style>

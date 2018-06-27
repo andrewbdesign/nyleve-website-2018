@@ -4,7 +4,7 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column is-two-quarters">
+            <div class="column is-two-quarters main-section">
                 <h1>Create new post</h1>
                 <form autocomplete="off" id="form" @submit.prevent="submitPost">
                     <label for="title">Title</label>
@@ -12,10 +12,7 @@
                     
                     <label for="date">Date (it is {{ todaysDate }})</label>
                     <input id="date" type="text" v-model="blogPost.date">
-                    
-                    <label for="body">Copy</label>
-                    <textarea id="body" v-model="blogPost.copy"></textarea>
-                    
+
                     <label for="image">Image (optional)</label>
                     <button class="button img-btn" @click="onPickFile">Upload Image</button>
                     <input 
@@ -24,6 +21,14 @@
                         ref="fileInput" 
                         accept="image/*"
                         @change="onFilePicked">
+
+                    <label for="iframe-url">iframe URL(optional)</label>
+                    <input id="iframe-url" type="text" v-model="blogPost.iframeUrl">
+                    
+                    <label for="body">Copy</label>
+                    <textarea id="body" v-model="blogPost.copy"></textarea>
+                    
+                    
                     
                     <input type="submit" class="button" :disabled="!formIsValid">Upload new post</button>
                 </form>
@@ -35,6 +40,9 @@
                     <h2>{{ blogPost.title }}</h2>
                     <p class="date">{{ blogPost.date }}</p>
                     <img :src="blogPost.image" v-if="blogPost.image" width="100%">
+                    <div class="resp-container" v-if="blogPost.iframeUrl">
+                        <iframe class="resp-iframe" :src="blogPost.iframeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
                     <template v-for="(copy, index) in bio">
                         <p v-html="bio[index]"></p>
                     </template>
@@ -59,6 +67,7 @@ export default {
                 date: '',
                 copy: '',
                 image: '',
+                iframeUrl: ''
             },
             imageFile: null,
             todaysDate: month[dateIs.getMonth()] + ' ' + dateIs.getDate() + ', ' + dateIs.getFullYear()
@@ -100,7 +109,8 @@ export default {
                 title: this.blogPost.title,
                 date: this.blogPost.date,
                 copy: this.blogPost.copy,
-                image: this.imageFile
+                image: this.imageFile,
+                iframeUrl: this.blogPost.iframeUrl
             }
             this.$store.dispatch('createPost', newPost)
             this.blogPost.title = ''
@@ -125,12 +135,16 @@ input, textarea {
     display: block;
     margin-bottom: 30px;
 }
+.button {
+    line-height: 0;
+}
 
 textarea {
     max-width: 100%;
     min-width: 100%;
     min-height: 150px;
 }
+
 
 .blog-container {
     background: #f4f4f4;

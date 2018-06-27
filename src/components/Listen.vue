@@ -4,9 +4,9 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column is-half">
+            <div class="column is-half main-section">
                 <h1>Listen</h1>
-                <template v-for="work in works">
+                <template v-for="work in works.slice().reverse()">
                     <hr>
                     <p>{{ work.title }}</p>
                     <span class="button" v-if="userIsAuthenticated" @click="editSong(work)">Edit</span>
@@ -16,7 +16,7 @@
                     </div>
                 </template>
             </div>
-            <div class="column editor-video" v-if="userIsAuthenticated">
+            <div class="column editor-video editor-section" v-if="userIsAuthenticated">
                 <h2>Add video</h2>
                 <form autocomplete="off" id="form" @submit.prevent="addSong">
                     <label for="title">Title</label>
@@ -133,6 +133,10 @@ p {
 hr {
     background: #000;
     height: 1px;
+}
+
+.button {
+    margin-bottom: 20px;
 }
 
 .resp-container {

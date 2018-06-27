@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="container epk-container">
+	<div class="container epk-container main-section">
 		
-		<h1>EPK</h1>
+		<h1>Nyleve - Electronic Press Kit</h1>
 		<div v-if="!editingCoverImage" class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
 			<button class="button" @click="editCoverImage">Update press cover shot</button>
 		</div>
@@ -10,19 +10,22 @@
 			<div class="press-shot-crop" :style="{ 'background-image': 'url(' + this.coverImagePreview + ')' }">
 				<h1>Preview</h1>
 			</div>
-			<button class="button img-btn" @click="onPickFile">Upload Cover Image</button>
+			
 			<input 
 				type="file" 
 				style="display: none" 
 				ref="fileInput" 
 				accept="image/*"
 				@change="onFilePicked">
-			<button class="button">Save</button>
+			<button class="button" @click="onPickFile">Upload Cover Image</button>				
+			<button @click="updateCoverImage" class="button">Save</button>
 			<button @click="cancelCoverImage" class="button">Cancel</button>
 		</div>
 		
 		<p class="img-download">Download a high-resolution (PRINT) press shot <a :href="epk.highRes" target="_blank">HERE</a> | Download a high-resolution (WEB) press shot <a :href="epk.lowRes" target="_blank">HERE</a> </p>
-		<button v-if="userIsAuthenticated" class="button" @click="editLinks">Update Links</button>
+		<div v-if="!editingLowHighRes">
+			<button v-if="userIsAuthenticated" class="button" @click="editLinks">Update Links</button>
+		</div>
 		<div v-if="editingLowHighRes">
 			<form autocomplete="off" id="form" @submit.prevent>
 				
@@ -39,7 +42,13 @@
 				<label for="facebook">Facebook</label>
 				<input id="facebook" type="text" v-model="facebookLink">
 
-				<input type="submit" @click="updateLinks" class="button" :disabled="!linksAreValid">
+				<label for="bandcamp">Bandcamp</label>
+				<input id="bandcamp" type="text" v-model="bandcampLink">
+
+				<label for="spotify">Spotify</label>
+				<input id="spotify" type="text" v-model="spotifyLink">
+
+				<input type="submit" @click="updateLinks" class="button submit-links" :disabled="!linksAreValid">
 				<span class="button" @click="cancelLinks">Cancel</span>
 			</form>
 		</div>
@@ -50,14 +59,14 @@
 		<div class="columns">
 			<div class="column" >
 				<img v-if="epk.image" :src="epk.image">
-				<button class="button">Update Image</button>
+				<button class="button" style="display: block;">Update Image</button>
 			</div>
 			<div class="column">
 				<div v-if="!editingTitleDesc">
 					<h3> {{ epk.title }} </h3>
 					<p> {{ epk.description }} </p>
 					<p v-for="(track, index) in epk.tracks.split('\n')">0{{index + 1}}. {{ track }}</p>
-					<button v-if="userIsAuthenticated" class="button" @click="editTitleDesc">Update copy</button>
+					<button class="button" @click="editTitleDesc">Update copy</button> <!-- v-if="userIsAuthenticated" -->
 				</div>
 				<div v-if="editingTitleDesc">
 					<form autocomplete="off" id="title-desc-form" @submit.prevent>
@@ -97,6 +106,20 @@
 				</div>
 				<div class="resp-container" v-if="!editingFrame">
 					<iframe class="resp-iframe" :src="iframeUrl.iframeSongs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+
+		<!-- VIDEO SECTION -->
+		<div class="columns">
+			<div class="column">
+				<div class="resp-container" v-if="!editingFrame">
+					<iframe class="resp-iframe" src="https://www.youtube.com/embed/k8iAfhmbbRQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				</div>
+			</div>
+			<div class="column">
+				<div class="resp-container" v-if="!editingFrame">
+					<iframe class="resp-iframe" src="https://www.youtube.com/embed/mwWzgh2TXH0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 				</div>
 			</div>
 		</div>
@@ -155,11 +178,17 @@ export default {
 			editingLowHighRes: false,
 			editingTitleDesc: false,
 			editingCoverImage: false,
+			editingAlbumImage: false,
 			coverImagePreview: '',
-			coverImageFile: '',
+			albumImagePreview: '',
+			imageCoverFile: '',
+			imageAlbumFile: '',
+			albumImagePreview: '',
 			iframeUrlPreview: '',
 			soundcloudLink: '',
 			facebookLink: '',
+			bandcampLink: '',
+			spotifyLink: '',
 			lowResLink: '',
 			highResLink: '',
 			title: '',
@@ -173,13 +202,22 @@ export default {
             let filename = files[0].name
             if (filename.lastIndexOf('.') <= 0) {
                 return alert('Please add a valid image')
-            }
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-                this.coverImagePreview = fileReader.result
-            })
-            fileReader.readAsDataURL(files[0])
-            this.coverImageFile = files[0]
+			}
+			if (this.editingCoverImage) {
+				const fileReader = new FileReader()
+				fileReader.addEventListener('load', () => {
+					this.coverImagePreview = fileReader.result
+				})
+				fileReader.readAsDataURL(files[0])
+				this.imageCoverFile = files[0]
+			} else if (this.editingAlbumImage) {
+				const fileReader = new FileReader()
+				fileReader.addEventListener('load', () => {
+					this.albumImagePreview = fileReader.result
+				})
+				fileReader.readAsDataURL(files[0])
+				this.imageAlbumFile = files[0]
+			}
         },
         onPickFile(e) {
             e.preventDefault()
@@ -187,11 +225,38 @@ export default {
         },
 		updateCoverImage() {
 			this.editingCoverImage = false
-			const coverImageObj = {}
-			if(this.title) {
-				coverImageObj.coverImage = this.coverImageFile
+			const coverImageObj = {
+				storeLocation: 'epk/image',
+				filename: 'coverimage'
 			}
-			this.$store.dispatch('updateEpk', titleDescObj)
+			if(this.imageFile) {
+				this.imageCoverFile = files[0]
+				coverImageObj.coverImage = this.imageAlbumFile
+			}
+
+			this.$store.dispatch('updateEpk', coverImageObj)
+		},
+		updateAlbumImage() {
+			this.editingAlbumImage = false
+			const albumImageObj = {
+				storeLocation: 'epk/coverimage',
+				filename: 'albumimage'
+			}
+			if(this.imageFile) {
+				albumImageObj.image = this.imageAlbumFile
+			}
+			this.$store.dispatch('updateEpk', albumImageObj)
+		},
+		editAlbumImage() {
+			this.editingAlbumImage = true
+			if (this.$store.getters.epk.image) {
+				this.albumImagePreview = this.$store.getters.epk.image
+			}
+		},
+		cancelAlbumImage() {
+			this.editingCoverImage = false
+			this.albumImagePreview = ''
+			this.imageFile = ''
 		},
 		editCoverImage() {
 			this.editingCoverImage = true
@@ -203,6 +268,7 @@ export default {
 		cancelCoverImage() {
 			this.editingCoverImage = false
 			this.coverImagePreview = ''
+			this.imageFile = ''
 		},
 		editTitleDesc() {
 			this.editingTitleDesc = true
@@ -250,6 +316,14 @@ export default {
 			if (this.$store.getters.epk.soundcloud) {
 				this.soundcloudLink = this.$store.getters.epk.soundcloud
 			}
+
+			if (this.$store.getters.epk.bandcamp) {
+				this.bandcampLink = this.$store.getters.epk.bandcamp
+			}
+
+			if (this.$store.getters.epk.spotify) {
+				this.spotifyLink = this.$store.getters.epk.spotify
+			}
 		},
 		cancelLinks() {
 			this.editingLowHighRes = false
@@ -272,6 +346,12 @@ export default {
 			}
 			if(this.soundcloudLink) {
 				linksObj.soundcloud = this.soundcloudLink
+			}
+			if(this.spotifyLink) {
+				linksObj.soundcloud = this.spotifyLink
+			}
+			if(this.bandcampLink) {
+				linksObj.soundcloud = this.bandcampLink
 			}
 			this.$store.dispatch('updateEpk', linksObj)
 		},
@@ -303,6 +383,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-section {
+	margin-bottom: 0;
+}
 .epk-container {
 	input[type="text"], textarea {
 		width: 100%;
@@ -333,6 +416,17 @@ export default {
 			left: 0;
 			bottom: 0;
 			margin: 0;
+			line-height: 0;
+		}
+		h1 {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			width: 180px;
+			height: 70px;
 		}
 	}
 	.press-shot-crop:hover button{
@@ -360,5 +454,11 @@ export default {
         height: 100%;
         border: 0;
     }
+}
+.button {
+	line-height: 0;
+}
+.submit-links {
+	width: initial;
 }
 </style>

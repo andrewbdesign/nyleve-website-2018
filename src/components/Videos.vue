@@ -4,7 +4,7 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column is-half video-page">
+            <div class="column is-half video-page main-section">
                 <h1>Videos</h1>
                 <template v-for="video in videos.slice().reverse()">
                     <span v-if="userIsAuthenticated" class="button" @click="editVideo(video)">Edit</span>
@@ -14,7 +14,7 @@
                     </div>
                 </template>
             </div>
-            <div class="column editor-video" v-if="userIsAuthenticated">
+            <div class="column editor-video editor-section" v-if="userIsAuthenticated">
                 <h2><span v-if="!isEditingVideo">Add</span><span v-if="isEditingVideo">Edit</span> video</h2>
                 <form autocomplete="off" id="form" @submit.prevent="submitVideo">
                     <label for="title">Video link</label>
@@ -98,6 +98,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .button {
+        margin-bottom: 20px;
+    }
     .editor-video {
         input[type='text'] {
             width: 100%;

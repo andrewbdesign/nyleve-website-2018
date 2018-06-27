@@ -4,7 +4,7 @@
             <div class="column is-one-quarter">
                 <app-nav></app-nav>
             </div>
-            <div class="column is-half blog-container">
+            <div class="column is-half blog-container main-section">
 
                 <template v-if="!editingPost">
                     <h1>Blog</h1>
@@ -15,6 +15,9 @@
                         <h2>{{ blog.title }}</h2>
                         <p class="date">{{ blog.date }}</p>
                         <img :src="blog.image" v-if="blog.image">
+                        <div class="resp-container" v-if="blog.iframeUrl">
+                            <iframe class="resp-iframe" :src="blog.iframeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
                         <template v-for="copy in blog.copy.split('\n')">
                             <p> {{ copy }}</p>
                         </template>
@@ -31,18 +34,23 @@
                                 
                                 <label for="date">Date</label>
                                 <input id="date" type="text" v-model="editBody.date">
+
+                                <label for="iframe">iframe URL</label>
+                                <input id="iframe" type="text" v-model="editBody.iframeUrl">
                                 
-                                <label for="body">Copy</label>
-                                <textarea id="body" v-model="editBody.copy"></textarea>
                                 
-                                <label for="image">Image (optional)</label>
-                                <button class="button img-btn" @click="onPickFile">Upload Image</button>
                                 <input 
                                     type="file" 
                                     style="display: none" 
                                     ref="fileInput" 
                                     accept="image/*"
                                     @change="onFilePicked">
+                                <label for="image">Image (optional)</label>
+                                <button class="button img-btn" @click="onPickFile">Upload Image</button>
+
+                                <label for="body">Copy</label>
+                                <textarea id="body" v-model="editBody.copy"></textarea>
+                                
                                 
                                 <input type="submit" class="button" :disabled="!formIsValid">
                                 <span class="button" @click="cancelEditPost">Cancel</span>
@@ -54,6 +62,9 @@
                                 <h2>{{ editBody.title }}</h2>
                                 <p class="date">{{ editBody.date }}</p>
                                 <img :src="editBody.image" v-if="editBody.image" width="100%">
+                                <div class="resp-container" v-if="editBody.iframeUrl">
+                                    <iframe class="resp-iframe" :src="editBody.iframeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
                                 <template v-for="copy in editBody.copy.split('\n')">
                                     <p> {{ copy }}</p>
                                 </template>
@@ -89,7 +100,8 @@ export default {
                 date: '',
                 copy: '',
                 id: '',
-                image: ''
+                image: '',
+                iframeUrl: ''
             },
             imageFile: null
         }
@@ -111,6 +123,8 @@ export default {
             this.editBody.date = post.date
             this.editBody.copy = post.copy
             this.image = post.image
+            this.editBody.iframeUrl = post.iframeUrl
+            console.log(post)
         },
         deletePost(post) {
             this.$store.dispatch('deletePost', post)
@@ -158,6 +172,9 @@ export default {
 </script>
 
 <style lang="scss">
+.button {
+    line-height: 0;
+}
 
 input, textarea {
     width: 100%;

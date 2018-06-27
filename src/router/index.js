@@ -11,6 +11,7 @@ import SignIn from '@/components/SignIn'
 import CreateBlogPost from '@/components/BlogCreator'
 import Videos from '@/components/Videos'
 import NotFoundPage from '@/components/NotFoundPage'
+import Tour from '@/components/Tour'
 import AuthGuard from './auth-guard'
 
 Vue.use(Router)
@@ -60,6 +61,10 @@ export default new Router({
         {
             path: '/signin',
             component: SignIn
+        },
+        {
+            path: '/tours',
+            component: Tour
         },
     ]
 })
