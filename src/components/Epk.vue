@@ -3,7 +3,7 @@
 		
 		<h1>Nyleve - Electronic Press Kit</h1>
 		<div v-if="!editingCoverImage" class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
-			<button class="button" @click="editCoverImage">Update press cover shot</button>
+			<button v-if="userIsAuthenticated" class="button" @click="editCoverImage">Update press cover shot</button>
 		</div>
 
 		<div v-if="editingCoverImage">
@@ -58,15 +58,30 @@
 		<!-- Featured Work -->
 		<div class="columns">
 			<div class="column" >
+				<div v-if="!editingAlbumImage">
 				<img v-if="epk.image" :src="epk.image">
-				<button class="button" style="display: block;">Update Image</button>
+					<button v-if="userIsAuthenticated" @click="editAlbumImage" class="button epk-image-btn">Edit Featured Album</button>
+				</div>
+				<div v-if="editingAlbumImage">
+				<img :src="this.albumImagePreview">
+					<input 
+						type="file" 
+						style="display: none" 
+						ref="fileInputImage" 
+						accept="image/*"
+						@change="onFilePicked">
+					<button @click="onPickFileImage" class="button epk-image-btn">Upload</button>
+					<button @click="updateAlbumImage" class="button epk-image-btn">Save</button>
+					<button @click="cancelAlbumImage" class="button epk-image-btn">Cancel</button>
+				</div>
+
 			</div>
 			<div class="column">
 				<div v-if="!editingTitleDesc">
 					<h3> {{ epk.title }} </h3>
 					<p> {{ epk.description }} </p>
 					<p v-for="(track, index) in epk.tracks.split('\n')">0{{index + 1}}. {{ track }}</p>
-					<button class="button" @click="editTitleDesc">Update copy</button> <!-- v-if="userIsAuthenticated" -->
+					<button v-if="userIsAuthenticated" class="button" @click="editTitleDesc">Update copy</button>
 				</div>
 				<div v-if="editingTitleDesc">
 					<form autocomplete="off" id="title-desc-form" @submit.prevent>
@@ -113,13 +128,41 @@
 		<!-- VIDEO SECTION -->
 		<div class="columns">
 			<div class="column">
-				<div class="resp-container" v-if="!editingFrame">
-					<iframe class="resp-iframe" src="https://www.youtube.com/embed/k8iAfhmbbRQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				<div v-if="!editingVideoIframes">
+					<div class="resp-container" >
+						<iframe class="resp-iframe" :src="epk.video1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+					<span v-if="userIsAuthenticated" class="button" @click="editVideoIframes">Edit Iframes</span>
+				</div>
+				<div v-if="editingVideoIframes">
+					<div class="resp-container" >
+						<iframe class="resp-iframe" :src="iframe1Preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+					<form id="iframe-1" >
+						<label for="iframe1">Video 1 iframe</label>
+						<input id="iframe1" v-model="iframe1Preview">
+						<span class="button iframe-btn" @click="updateVideoIframes">Update Videos</span>
+						<span class="button iframe-btn" @click="cancelVideoIframes">Cancel</span>
+					</form>
 				</div>
 			</div>
 			<div class="column">
-				<div class="resp-container" v-if="!editingFrame">
-					<iframe class="resp-iframe" src="https://www.youtube.com/embed/mwWzgh2TXH0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+				<div v-if="!editingVideoIframes">
+					<div class="resp-container" >
+						<iframe class="resp-iframe" :src="epk.video2" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+					<!-- <span class="button" @click="editVideoIframes">Edit Iframes</span> -->
+				</div>
+				<div v-if="editingVideoIframes">
+					<div class="resp-container" >
+						<iframe class="resp-iframe" :src="iframe2Preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					</div>
+					<form id="iframe-1" >
+						<label for="iframe2">Video 2 iframe</label>
+						<input id="iframe2" v-model="iframe2Preview">
+						<!-- <span class="button iframe-btn" @click="updateVideoIframes">Update Video 2</span> -->
+						<!-- <span class="button iframe-btn" @click="cancelVideoIframes">Cancel</span> -->
+					</form>
 				</div>
 			</div>
 		</div>
@@ -135,8 +178,11 @@
 					<p v-for="(paragraph, index) in sliceItems(1)">{{ paragraph }}</p>
 				</template>
 				<p class="social-links">
-					<a :href="epk.facebook" target="_blank">Facebook</a> |
-					<a :href="epk.soundcloud" target="_blank">Soundcloud</a>
+					<a v-if="epk.facebook" target="_blank" :href="epk.facebook">Facebook</a> <span v-if="epk.soundcloud">|</span>
+					<a v-if="epk.soundcloud" target="_blank" :href="epk.soundcloud">Soundcloud</a> <span v-if="epk.bandcamp">|</span>
+					<a v-if="epk.bandcamp" target="_blank" :href="epk.bandcamp">Bandcamp</a> <span v-if="epk.spotify">|</span>
+					<a v-if="epk.spotify" target="_blank" :href="epk.spotify">Spotify</a> <span v-if="epk.youtube">|</span>
+					<a v-if="epk.youtube" target="_blank" :href="epk.youtube">Youtube</a>
 				</p>
 			</div>
 		</div>
@@ -179,6 +225,7 @@ export default {
 			editingTitleDesc: false,
 			editingCoverImage: false,
 			editingAlbumImage: false,
+			editingVideoIframes: false,
 			coverImagePreview: '',
 			albumImagePreview: '',
 			imageCoverFile: '',
@@ -193,10 +240,39 @@ export default {
 			highResLink: '',
 			title: '',
 			description: '',
-			tracks: ''
+			tracks: '',
+			videoIframe1: '',
+			videoIframe2: '',
+			iframe1Preview: '',
+			iframe2Preview: ''
 		}
 	},
 	methods: {
+		editVideoIframes() {
+			this.editingVideoIframes = true
+			if (this.epk.video1) {
+				this.iframe1Preview = this.epk.video1
+			}
+			if (this.epk.video2) {
+				this.iframe2Preview = this.epk.video2
+			}
+		},
+		cancelVideoIframes() {
+			this.editingVideoIframes = false
+			this.iframe1Preview = ''
+			this.iframe2Preview = ''
+		},
+		updateVideoIframes() {
+			this.editingVideoIframes = false
+			const iframeVideoObj = {}
+			if (this.iframe1Preview) {
+				iframeVideoObj.video1 = this.iframe1Preview
+			}
+			if (this.iframe2Preview) {
+				iframeVideoObj.video2 = this.iframe2Preview
+			}
+			this.$store.dispatch('updateEpk', iframeVideoObj)
+		},
 		onFilePicked(e) {
             const files = e.target.files
             let filename = files[0].name
@@ -218,32 +294,30 @@ export default {
 				fileReader.readAsDataURL(files[0])
 				this.imageAlbumFile = files[0]
 			}
-        },
+		},
         onPickFile(e) {
             e.preventDefault()
             this.$refs.fileInput.click()
+		},
+		onPickFileImage(e) {
+            e.preventDefault()
+            this.$refs.fileInputImage.click()
         },
 		updateCoverImage() {
 			this.editingCoverImage = false
 			const coverImageObj = {
-				storeLocation: 'epk/image',
-				filename: 'coverimage'
+				storeLocation: 'epk/coverImage',
+				filename: 'coverimage',
+				coverImage: this.imageCoverFile
 			}
-			if(this.imageFile) {
-				this.imageCoverFile = files[0]
-				coverImageObj.coverImage = this.imageAlbumFile
-			}
-
 			this.$store.dispatch('updateEpk', coverImageObj)
 		},
 		updateAlbumImage() {
 			this.editingAlbumImage = false
 			const albumImageObj = {
-				storeLocation: 'epk/coverimage',
-				filename: 'albumimage'
-			}
-			if(this.imageFile) {
-				albumImageObj.image = this.imageAlbumFile
+				storeLocation: 'epk/image',
+				filename: 'albumimage',
+				image: this.imageAlbumFile
 			}
 			this.$store.dispatch('updateEpk', albumImageObj)
 		},
@@ -348,11 +422,12 @@ export default {
 				linksObj.soundcloud = this.soundcloudLink
 			}
 			if(this.spotifyLink) {
-				linksObj.soundcloud = this.spotifyLink
+				linksObj.spotify = this.spotifyLink
 			}
 			if(this.bandcampLink) {
-				linksObj.soundcloud = this.bandcampLink
+				linksObj.bandcamp = this.bandcampLink
 			}
+			// console.log('linksObj', linksObj)
 			this.$store.dispatch('updateEpk', linksObj)
 		},
 		updateIframe() {
@@ -362,6 +437,7 @@ export default {
 			}
 			this.$store.dispatch('updateEpk', iframeObj)
 		},
+
 		cancelEditPost() {
 			this.editingFrame = false
 			this.iframeUrlPreview = this.iframeUrl.iframeSongs
@@ -386,6 +462,18 @@ export default {
 .main-section {
 	margin-bottom: 0;
 }
+.epk-image-btn {
+	width: initial;
+	display: inline-block;
+}
+
+input {
+	width: 100%;
+}
+.iframe-btn {
+	margin: 0;
+}
+
 .epk-container {
 	input[type="text"], textarea {
 		width: 100%;
@@ -461,4 +549,5 @@ export default {
 .submit-links {
 	width: initial;
 }
+
 </style>

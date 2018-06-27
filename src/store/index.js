@@ -27,8 +27,10 @@ export const store = new Vuex.Store({
             tracks: '',
             facebook: '',
             soundcloud: '',
-            coverImage: 'http://via.placeholder.com/350x350',
-            image: 'http://via.placeholder.com/350x350',
+            coverImage: '',
+            image: '',
+            video1: '', //'https://www.youtube.com/embed/k8iAfhmbbRQ',
+            video2: '' // 'https://www.youtube.com/embed/mwWzgh2TXH0'
         },
         user: null
     },
@@ -82,23 +84,43 @@ export const store = new Vuex.Store({
             if (payload.soundcloud) {
                 state.epk.soundcloud = payload.soundcloud
             }
+            if (payload.bandcamp) {
+                state.epk.bandcamp = payload.bandcamp
+            }
+            if (payload.spotify) {
+                state.epk.spotify = payload.spotify
+            }
+            if (payload.image) {
+                state.epk.image = payload.image
+            }
+            if (payload.coverImage) {
+                state.epk.coverImage = payload.coverImage
+            }
+            if (payload.video1) {
+                state.epk.video1 = payload.video1
+            }
+            if (payload.video2) {
+                state.epk.video2 = payload.video2
+            }
 
         }
     },
     actions: {
         updatePost({commit}, payload) {
+            console.log('store, updating post', payload)
             let postId = payload.id
             let postObj = {
                 title: payload.title,
                 date: payload.date,
                 copy: payload.copy,
-                image: payload.image
+                image: payload.image,
+                iframeUrl: payload.iframeUrl
             }
-
             let imageUrl
-            let hasNoImage = payload.image !== null
+            let hasNoImage = payload.image === null
+            console.log('hasNoImage', hasNoImage)
 
-            if (!hasNoImage) {
+            if (hasNoImage) {
                 firebase.database().ref('blogs/' + postId).set(postObj)
                     .then(() => {
                         return firebase.database().ref('blogs').once('value')
@@ -112,7 +134,8 @@ export const store = new Vuex.Store({
                                 title: obj[key].title,
                                 date: obj[key].date,
                                 copy: obj[key].copy,
-                                image: obj[key].image
+                                image: obj[key].image,
+                                iframeUrl: obj[key].iframeUrl
                             })
                         }
                         commit('setLoadedPosts', blogPosts)
@@ -141,7 +164,8 @@ export const store = new Vuex.Store({
                                 title: obj[key].title,
                                 date: obj[key].date,
                                 copy: obj[key].copy,
-                                image: obj[key].image
+                                image: obj[key].image,
+                                iframeUrl: obj[key].iframeUrl
                             })
                         }
                         commit('setLoadedPosts', blogPosts)
@@ -176,7 +200,8 @@ export const store = new Vuex.Store({
                             title: obj[key].title,
                             date: obj[key].date,
                             copy: obj[key].copy,
-                            image: obj[key].image
+                            image: obj[key].image,
+                            iframeUrl: obj[key].iframeUrl
                         })
                     }
                     commit('setLoadedPosts', blogPosts)
@@ -197,21 +222,40 @@ export const store = new Vuex.Store({
         },
         updateEpk({commit}, payload) {
 
-            // check if there is image. if not, do the below
-
             let imageUrl
-            let hasImage = payload.image
-            console.log('hasImage:', hasImage) 
-
-            // }
-            if (payload.image) {
-                const filename = payload.coverImage
-                console.log('filename', filename)
-                // let ext = payload.coverImage
-                // ext = ext.slice(filename.lastIndexOf('.'))
-                // console.log('ext', ext)
-                // const ext = filename.slice(filename.lastIndexOf('.'))
-                // return firebase.storage().ref('blogs/' + key + ext).put(payload.image)
+            let hasNoImage = payload.image === null
+            console.log('payload updateEPK', payload, hasNoImage, '<-- has no image') 
+            if (payload.image || payload.coverImage) {
+                let filename
+                let payloadImageDirectory
+                if (payload.storeLocation === 'epk/coverImage') {
+                    payloadImageDirectory = payload.coverImage
+                    filename = payload.coverImage.name
+                } else if (payload.storeLocation === 'epk/image') {
+                    payloadImageDirectory = payload.image
+                    filename = payload.image.name
+                }
+                const ext = filename.slice(filename.lastIndexOf('.'))
+                return firebase.storage().ref(payload.storeLocation + '/' + filename + ext).put(payloadImageDirectory)
+                    .then(fileData => {
+                        imageUrl = fileData.metadata.downloadURLs[0]
+                        if (payload.storeLocation === 'epk/coverImage') {
+                            return firebase.database().ref('epk').update({coverImage: imageUrl})
+                        } else if(payload.storeLocation === 'epk/image') {
+                            return firebase.database().ref('epk').update({image: imageUrl})
+                        }
+                    })
+                    .then(() => {
+                        return firebase.database().ref('epk').once('value')
+                    })
+                    .then(data => {
+                        const obj = data.val()
+                        console.log('epk obj-----', obj)
+                        commit('updateEpk', obj)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             } else {
                 firebase.database().ref('epk').update(payload)
                     .then(() => {

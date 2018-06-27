@@ -5,16 +5,27 @@
                 <app-nav></app-nav>
             </div>
             <div class="column is-half main-section">
-                <h1>Tours</h1>
+                <h1>Upcoming Shows</h1>
                 <template v-for="tour in tours.slice().reverse()">
-                    <p> {{ tour.title }} </p>
+                    <h2> {{ tour.title }} </h2>
+                    <p class="dates"> {{ tour.date }} </p>
                     <p> {{ tour.description }} </p>
-                    <p> {{ tour.date }} </p>
-                    <p> {{ tour.url }} </p>
-                    <p> {{ tour.rsvp }} </p>
+
+                    <a class="button" :href="tour.url" target="_blank">TICKETS</a>
+                    <a class="button" :href="tour.rsvp" target="_blank">RSVP</a>
+                    <hr>
                 </template>
-                <!-- <p>{{ tours }}</p> -->
-                <!-- <router-link to="/blog">Click here to go home?</router-link> -->
+            </div>
+            <div class="column editor-section">
+                <h1>Upcoming Shows</h1>
+                <!-- <template v-for="tour in tours.slice().reverse()">
+                    <h2> {{ tour.title }} </h2>
+                    <p class="dates"> {{ tour.date }} </p>
+                    <p> {{ tour.description }} </p>
+
+                    <a class="button" :href="tour.url" target="_blank">TICKETS</a>
+                    <a class="button" :href="tour.rsvp" target="_blank">RSVP</a>
+                </template> -->
             </div>
         </div>
   </div>
@@ -30,5 +41,20 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss" scoped>
+h2 {
+    margin-bottom: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+}
+p {
+    color: #000;
+}
+.button {
+    margin-top: 20px;
+}
+.dates {
+    font-weight: 700;
+}
 </style>

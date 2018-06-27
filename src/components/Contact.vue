@@ -7,11 +7,11 @@
             <div class="column is-half main-section">
                 <h1>Contact</h1>
 
-                <a target="_blank" :href="facebook">Facebook</a> 
-                | <a target="_blank" :href="youtube">Youtube</a> 
-                | <a target="_blank" :href="soundcloud">Soundcloud</a> 
-                | <a target="_blank" :href="bandcamp">Bandcamp</a> 
-                <!-- | <a target="_blank" :href="youtube">Spotify</a>  -->
+                <a v-if="epk.facebook" target="_blank" :href="epk.facebook">Facebook</a> <span v-if="epk.soundcloud">|</span>
+                <a v-if="epk.soundcloud" target="_blank" :href="epk.soundcloud">Soundcloud</a> <span v-if="epk.bandcamp">|</span>
+                <a v-if="epk.bandcamp" target="_blank" :href="epk.bandcamp">Bandcamp</a> <span v-if="epk.spotify">|</span>
+                <a v-if="epk.spotify" target="_blank" :href="epk.spotify">Spotify</a> <span v-if="epk.youtube">|</span>
+                <a v-if="epk.youtube" target="_blank" :href="epk.youtube">Youtube</a>
                 <br>
                 <br>
                 <a class="email" href="mailto:nylevecontact@gmail.com"> {{ email }} </a>
@@ -23,13 +23,13 @@
 
 <script>
 export default {
+    computed: {
+        epk() {
+            return this.$store.getters.epk
+        }
+    },
     data() {
         return {
-            facebook: 'https://www.facebook.com/nylevemusic',
-            youtube: 'https://www.youtube.com/channel/UCCm0c2j0funJ0GmN493yj0Q?view_as=subscriber',
-            soundcloud: 'https://soundcloud.com/nylevemusic',
-            // spotify: 'https://soundcloud.com/nylevemusic',
-            bandcamp: 'https://nyleve.bandcamp.com/',
             email: 'nylevecontact@gmail.com'
         }
     }

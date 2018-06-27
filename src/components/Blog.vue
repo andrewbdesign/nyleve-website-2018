@@ -10,8 +10,8 @@
                     <h1>Blog</h1>
                     <hr>
                     <div class="entry" v-for="blog in blogs.slice().reverse()" :key="blog.id">
-                        <span class="button" v-if="userIsAuthenticated" @click="editPost(blog)">Edit</span>
-                        <span class="button" v-if="userIsAuthenticated" @click="deletePost(blog)">Delete</span>
+                        <span class="button" @click="editPost(blog)">Edit</span> <!-- v-if="userIsAuthenticated" -->
+                        <span class="button" @click="deletePost(blog)">Delete</span>
                         <h2>{{ blog.title }}</h2>
                         <p class="date">{{ blog.date }}</p>
                         <img :src="blog.image" v-if="blog.image">
@@ -151,19 +151,21 @@ export default {
                 title: this.editBody.title,
                 date: this.editBody.date,
                 copy: this.editBody.copy,
-                id: this.editBody.id
+                id: this.editBody.id,
+                iframeUrl: this.editBody.iframeUrl
             }
 
             if (this.imageFile) {
                 editPost.image = this.imageFile
             }
-            console.log('updating editPost', this.imageFile, 'then', editPost)
+            console.log('updating editPost', editPost)
             this.$store.dispatch('updatePost', editPost)
-            this.editBody.title = ''
-            this.editBody.date = ''
-            this.editBody.copy = ''
-            this.imageFile = null
-            this.$router.push('/blog')
+            // this.editBody.copy = ''
+            // this.editBody.date = ''
+            // this.editBody.id = ''
+            // this.editBody.iframeUrl = ''
+            // this.editBody.title = ''
+            // this.imageFile = null
             this.editingPost = false
         }
     }
