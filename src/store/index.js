@@ -13,11 +13,7 @@ export const store = new Vuex.Store({
         videos: [],
         works: [],
         bio: {body: ''},
-        tours: [
-            {title:'RSL', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'},
-            {title:'RSL2', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'},
-            {title:'RSL3', description:'This is where the description will be', date:'August 2, 2018', url:'http://www.google.com', rsvp:'http://www.google.com'}
-        ],
+        tours: [],
         epk: {
             iframeSongs: '',
             lowRes: '',
@@ -46,6 +42,12 @@ export const store = new Vuex.Store({
         },
         addVideo(state, payload) {
             state.videos.push(payload)
+        },
+        addTour(state, payload) {
+            state.tours.push(payload)
+        },
+        setLoadedTours(state, payload) {
+            state.tours = payload
         },
         setLoadedVideos(state, payload) {
             state.videos = payload
@@ -447,6 +449,110 @@ export const store = new Vuex.Store({
                         id: key
                     }
                     commit('addVideo', newObj)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        deleteTour({commit}, payload) {
+            let tourId = payload.id
+            firebase.database().ref('tours/' + tourId).remove()
+                .then(() => {
+                    console.log('tour successfully removed')
+                    return firebase.database().ref('tours').once('value')
+                })
+                .then(data => {
+                    const tourList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        tourList.push({
+                            id: key,
+                            url: obj[key].url,
+                            rsvp: obj[key].rsvp,
+                            title: obj[key].title,
+                            description: obj[key].description,
+                            date: obj[key].date
+                        })
+                    }
+                    commit('setLoadedTours', tourList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        updateTour({commit}, payload) {
+            let tourId = payload.id
+            const tourObj = {
+                url: payload.url,
+                rsvp: payload.rsvp,
+                title: payload.title,
+                description: payload.description,
+                date: payload.date,
+            }
+            firebase.database().ref('tours/' + tourId).set(tourObj)
+                .then(() => {
+                    return firebase.database().ref('tours').once('value')
+                })
+                .then(data => {
+                    const tourList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        tourList.push({
+                            id: key,
+                            url: obj[key].url,
+                            rsvp: obj[key].rsvp,
+                            title: obj[key].title,
+                            description: obj[key].description,
+                            date: obj[key].date
+                        })
+                    }
+                    commit('setLoadedTours', tourList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        loadTours({commit}) {
+            firebase.database().ref('tours').once('value')
+                .then(data => {
+                    const tourList = []
+                    const obj = data.val()
+                    for(let key in obj) {
+                        tourList.push({
+                            id: key,
+                            url: obj[key].url,
+                            rsvp: obj[key].rsvp,
+                            title: obj[key].title,
+                            description: obj[key].description,
+                            date: obj[key].date
+                        })
+                    }
+                    commit('setLoadedTours', tourList)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        addTour({commit}, payload) {
+            let tourObj = {
+                title: payload.title,
+                description: payload.description,
+                date: payload.date,
+                url: payload.url,
+                rsvp: payload.title
+            }
+            let key
+            firebase.database().ref('tours').push(tourObj)
+                .then(data => {
+                    key = data.key
+                    return key
+                })
+                .then(data => {
+                    let newObj = {
+                        ...tourObj,
+                        id: key
+                    }
+                    commit('addTour', newObj)
                 })
                 .catch(error => {
                     console.log(error)
