@@ -53,10 +53,10 @@
 			</form>
 		</div>
 		
-		<h2>Latest release</h2>
 		
 		<!-- Featured Work -->
-		<div class="columns">
+		<h2 class="section-copy">Latest release</h2>
+		<div class="columns section-copy">
 			<div class="column" >
 				<div v-if="!editingAlbumImage">
 				<img v-if="epk.image" :src="epk.image">
@@ -126,7 +126,7 @@
 		</div>
 
 		<!-- VIDEO SECTION -->
-		<div class="columns">
+		<div class="columns section-copy">
 			<div class="column">
 				<div v-if="!editingVideoIframes">
 					<div class="resp-container" >
@@ -168,7 +168,7 @@
 		</div>
 		
 		<!-- BIO -->
-		<div class="columns">
+		<div class="columns section-copy">
 			<div class="column bio-profile">
 				<h2>Nyleve Bio</h2>
 				
@@ -461,6 +461,10 @@ export default {
 <style lang="scss" scoped>
 .main-section {
 	margin-bottom: 0;
+	padding: 2em 0;
+}
+.section-copy {
+	pading: 2em 0;
 }
 .epk-image-btn {
 	width: initial;
@@ -475,6 +479,7 @@ input {
 }
 
 .epk-container {
+	max-width: 760px;
 	input[type="text"], textarea {
 		width: 100%;
 		margin: 5px;
@@ -490,6 +495,7 @@ input {
 	}
 	.img-download {
 		margin: 10px 0 20px;
+		font-size: 12px;
 	}
 	.press-shot-crop {
 		background-repeat: no-repeat;

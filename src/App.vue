@@ -87,5 +87,20 @@ h2 {
     .container {
         padding: 1em 2em;
     }
+    .menu-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.97);
+        z-index: 30;
+        padding: 80px;
+        text-align: center;
+        a {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+    }
 }
 </style>
