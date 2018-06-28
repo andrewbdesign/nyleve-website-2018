@@ -51,7 +51,7 @@ export default {
                 email: this.userDetail.email,
                 password: this.userDetail.password
             }
-            console.log('login object', loginObj)
+            // console.log('login object', loginObj)
             this.$store.dispatch('signUserIn', loginObj)
             
         }

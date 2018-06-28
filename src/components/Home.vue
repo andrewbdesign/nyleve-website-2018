@@ -3,36 +3,49 @@
         <h1 v-html="title"></h1>
         <img class="ep-artwork" src="../../static/ep-artwork.jpg" alt="">
         <div class="social-links">
-            <a href="" target="_blank">Spotify</a> |
-            <a href="" target="_blank">Bandcamp</a> |
-            <a href="" target="_blank">Itunes</a> |
-            <a href="" target="_blank">Soundcloud</a>
+            <a :href="epk.spotify || 'http://google.com'" target="_blank">Spotify</a> |
+            <a :href="epk.bandcamp || 'https://nyleve.bandcamp.com/'" target="_blank">Bandcamp</a> |
+            <a :href="epk.itunes || 'https://www.apple.com/au/itunes/'" target="_blank">Itunes</a> |
+            <a :href="epk.soundcloud || 'https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO'" target="_blank">Soundcloud</a>
         </div>
-        <router-link to="/blog" class="button website-btn">Continue to Main site</router-link>
+        <span @click="mainPageClick" class="button website-btn">Continue to Main Site</span>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
-  data () {
-    return {
-        title: 'An Empty Space Between'
+    name: 'Home',
+    computed: {
+        epk() {
+            return this.$store.getters.epk
+        }
+    },
+    data () {
+        return {
+            title: 'An Empty Space Between'
+        }
+    },
+    methods: {
+        mainPageClick() {
+            let tl = new TimelineMax()
+            let ease = 'Power1.easeOut'
+            // tl.to('.home-section h1', 1, {autoAlpha:0,  ease, delay:.2})
+            // tl.to('.ep-artwork', 1, {autoAlpha:0, y:0, ease}, '.3')
+            // tl.to('.social-links', 1, {autoAlpha:0, ease}, '.6')
+            // tl.to('.home-section .button', 1, {autoAlpha:0, ease, onComplete: () => {
+            this.$router.push('/blog')
+            // }}, '.8')
+        }
+    },
+    mounted() {
+        let tl = new TimelineMax()
+        let ease = 'Power1.easeOut'
+        TweenMax.set('.ep-artwork, .social-links, .home-section .button', {y:-10})
+        tl.to('.home-section h1', 1, {autoAlpha:1,  ease, delay:.2})
+        tl.to('.ep-artwork', 1, {autoAlpha:1, y:0, ease}, '.3')
+        tl.to('.social-links', 1, {autoAlpha:1,  y:0, ease}, '.6')
+        tl.to('.home-section .button', 1, {autoAlpha:1, y:0, ease}, '.8')
     }
-  },
-  mounted() {
-      intro()
-  }
-}
-
-function intro() {
-    let tl = new TimelineMax()
-    let ease = 'Power1.easeOut'
-    TweenMax.set('.ep-artwork, .social-links, .home-section .button', {y:-10})
-    tl.to('.home-section h1', 1, {autoAlpha:1,  ease, delay:.2})
-    tl.to('.ep-artwork', 1, {autoAlpha:1, y:0, ease}, '.3')
-    tl.to('.social-links', 1, {autoAlpha:1,  y:0, ease}, '.6')
-    tl.to('.home-section .button', 1, {autoAlpha:1, y:0, ease}, '.8')
 }
 
 </script>
@@ -64,6 +77,10 @@ body {
     padding: 20px 62px;
     border: 1px solid #fff;
     margin-top: 40px;
+    &:hover {
+        background: #fff;
+        color: #000;
+    }
 }
 .home-section {
     padding: 50px 0;
@@ -78,6 +95,7 @@ body {
     h1 {
         font-family: 'Lora', serif;
         // font-family: 'Markazi Text', serif;
+        padding: 0 1em;
         font-size: 3em;
         margin: 0 auto;
         font-weight: 300;

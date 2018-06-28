@@ -130,7 +130,6 @@ input, textarea {
     border: 1px solid #e2e2e2;
     padding: 5px;
 }
-
 .img-btn {
     display: block;
     margin-bottom: 30px;

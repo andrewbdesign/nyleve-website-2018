@@ -10,8 +10,8 @@
                     <h1>Blog</h1>
                     <hr>
                     <div class="entry" v-for="blog in blogs.slice().reverse()" :key="blog.id">
-                        <span class="button" @click="editPost(blog)">Edit</span> <!-- v-if="userIsAuthenticated" -->
-                        <span class="button" @click="deletePost(blog)">Delete</span>
+                        <span class="button" v-if="userIsAuthenticated" @click="editPost(blog)">Edit</span>
+                        <span class="button" v-if="userIsAuthenticated" @click="deletePost(blog)">Delete</span>
                         <h2>{{ blog.title }}</h2>
                         <p class="date">{{ blog.date }}</p>
                         <img :src="blog.image" v-if="blog.image">
@@ -38,7 +38,6 @@
                                 <label for="iframe">iframe URL</label>
                                 <input id="iframe" type="text" v-model="editBody.iframeUrl">
                                 
-                                
                                 <input 
                                     type="file" 
                                     style="display: none" 
@@ -50,7 +49,6 @@
 
                                 <label for="body">Copy</label>
                                 <textarea id="body" v-model="editBody.copy"></textarea>
-                                
                                 
                                 <input type="submit" class="button" :disabled="!formIsValid">
                                 <span class="button" @click="cancelEditPost">Cancel</span>
@@ -109,7 +107,6 @@ export default {
     methods: {
         cancelEditPost() {
             this.editingPost = false
-
             this.editBody.id = ''
             this.editBody.title = ''
             this.editBody.date = ''
@@ -160,12 +157,12 @@ export default {
             }
             console.log('updating editPost', editPost)
             this.$store.dispatch('updatePost', editPost)
-            // this.editBody.copy = ''
-            // this.editBody.date = ''
-            // this.editBody.id = ''
-            // this.editBody.iframeUrl = ''
-            // this.editBody.title = ''
-            // this.imageFile = null
+            this.editBody.copy = ''
+            this.editBody.date = ''
+            this.editBody.id = ''
+            this.editBody.iframeUrl = ''
+            this.editBody.title = ''
+            this.imageFile = null
             this.editingPost = false
         }
     }

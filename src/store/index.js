@@ -24,13 +24,18 @@ export const store = new Vuex.Store({
             facebook: '',
             soundcloud: '',
             coverImage: '',
+            itunes: '',
             image: '',
             video1: '', //'https://www.youtube.com/embed/k8iAfhmbbRQ',
             video2: '' // 'https://www.youtube.com/embed/mwWzgh2TXH0'
         },
-        user: null
+        user: null,
+        epkLoaded: null
     },
     mutations: {
+        epkLoaded(state, payload) {
+            state.epkLoaded = payload
+        },
         createPost(state, payload) {
             state.blogs.push(payload)
         },
@@ -91,6 +96,9 @@ export const store = new Vuex.Store({
             }
             if (payload.spotify) {
                 state.epk.spotify = payload.spotify
+            }
+            if (payload.itunes) {
+                state.epk.itunes = payload.itunes
             }
             if (payload.image) {
                 state.epk.image = payload.image
@@ -666,6 +674,9 @@ export const store = new Vuex.Store({
         
     },
     getters: {
+        epkLoaded(state) {
+            return state.epkLoaded
+        },
         blogs(state) {
             return state.blogs
         },

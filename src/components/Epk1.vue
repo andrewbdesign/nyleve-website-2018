@@ -129,47 +129,6 @@
 			</div>
 		</div>
 
-		<!-- VIDEO SECTION -->
-		<div class="columns section-copy">
-			<div class="column">
-				<div v-if="!editingVideoIframes">
-					<div class="resp-container" >
-						<iframe class="resp-iframe" :src="epk.video1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-					<span v-if="userIsAuthenticated" class="button" @click="editVideoIframes">Edit Iframes</span>
-				</div>
-				<div v-if="editingVideoIframes">
-					<div class="resp-container" >
-						<iframe class="resp-iframe" :src="iframe1Preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-					<form id="iframe-1" >
-						<label for="iframe1">Video 1 iframe</label>
-						<input id="iframe1" v-model="iframe1Preview">
-						<span class="button iframe-btn" @click="updateVideoIframes">Update Videos</span>
-						<span class="button iframe-btn" @click="cancelVideoIframes">Cancel</span>
-					</form>
-				</div>
-			</div>
-			<div class="column">
-				<div v-if="!editingVideoIframes">
-					<div class="resp-container" >
-						<iframe class="resp-iframe" :src="epk.video2" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-					<!-- <span class="button" @click="editVideoIframes">Edit Iframes</span> -->
-				</div>
-				<div v-if="editingVideoIframes">
-					<div class="resp-container" >
-						<iframe class="resp-iframe" :src="iframe2Preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-					<form id="iframe-1" >
-						<label for="iframe2">Video 2 iframe</label>
-						<input id="iframe2" v-model="iframe2Preview">
-						<!-- <span class="button iframe-btn" @click="updateVideoIframes">Update Video 2</span> -->
-						<!-- <span class="button iframe-btn" @click="cancelVideoIframes">Cancel</span> -->
-					</form>
-				</div>
-			</div>
-		</div>
 		
 		<!-- BIO -->
 		<div class="columns section-copy">

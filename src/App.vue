@@ -13,6 +13,13 @@ export default {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700');
+// a {
+//     color: #65C6B6;
+//     &:hover {
+//         color: #0ECEB1;
+//         text-decoration: underline;
+//     }
+// }
 
 body {
     -webkit-font-smoothing: antialiased;
@@ -65,7 +72,6 @@ h1 {
     font-family: 'Source Serif Pro', serif;
     font-size: 3em;
     font-weight: 700;
-    /* text-transform: uppercase; */
     margin: 0;
     margin-bottom: 30px;
     color: #000;
@@ -80,6 +86,11 @@ h2 {
     .menu-container {
         left: 20px;
     }
+
+    .menu {
+        opacity: 0;
+        
+    }
 }
 
 
@@ -87,7 +98,12 @@ h2 {
     .container {
         padding: 1em 2em;
     }
+    .menu {
+        opacity: 1 !important;
+    }
     .menu-container {
+        opacity: 0;
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -100,6 +116,14 @@ h2 {
         a {
             font-size: 1.1em;
             margin-bottom: 12px;
+        }
+    }
+    .menu-container.mobile-menu.active {
+        opacity: 1;
+        display: block;
+        pointer-events: all;
+        a {
+            margin-bottom: 0;
         }
     }
 }

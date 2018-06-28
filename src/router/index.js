@@ -7,6 +7,7 @@ import Contact from '@/components/Contact'
 import Blog from '@/components/Blog'
 import Bio from '@/components/Bio'
 import Epk from '@/components/Epk'
+import Epk1 from '@/components/Epk1'
 import SignIn from '@/components/SignIn'
 import CreateBlogPost from '@/components/BlogCreator'
 import Videos from '@/components/Videos'
@@ -54,6 +55,10 @@ export default new Router({
         {
             path: '/epk',
             component: Epk
+        },
+        {
+            path: '/epk1',
+            component: Epk1
         },
         {   path: '*',
             component: NotFoundPage

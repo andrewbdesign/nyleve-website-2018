@@ -68,6 +68,9 @@ export default {
 
 <style lang="scss" scoped>
 
+.button {
+    width: initial;
+}
 .editor-bio {
     input[type='text'] {
         max-width: 100%;
@@ -85,6 +88,14 @@ export default {
     input {
         margin-bottom: 20px;
     }
+}
+.main-section {
+    margin-bottom: 4em;
+}
+.editor-section {
+    height: initial;
+    margin-bottom: 4em;
+    margin-top: -4em;
 }
 p {
     margin-bottom: 20px;
