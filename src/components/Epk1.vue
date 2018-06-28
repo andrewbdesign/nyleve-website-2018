@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="container epk-container main-section">
+	<div class="container epk-container main-section" v-if="epk.title">
 		
 		<h1>Nyleve - Electronic Press Kit</h1>
 		<div v-if="!editingCoverImage" class="press-shot-crop" :style="{ 'background-image': 'url(' + epk.coverImage + ')' }">
