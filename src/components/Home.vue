@@ -83,15 +83,16 @@ body {
     }
 }
 .home-section {
-    padding: 50px 0;
     color: #fff;
+    position: fixed;
+    overflow-y: scroll;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    padding: 50px 0;
+    display: inline-block;
     background-image: url('../../static/landingpage-bg.jpg');
     background-size: cover;
     background-attachment: fixed;
-    position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto;
-    display: inline-block;
     h1 {
         font-family: 'Lora', serif;
         // font-family: 'Markazi Text', serif;
@@ -118,5 +119,30 @@ h1 {
     font-size: 40px;
     font-weight: 700;
     margin: 0;
+}
+@media (max-width: 1196px){
+    .home-section {
+        h1 {
+            font-size: 2em;
+        }
+    }
+}
+
+
+@media (max-width: 845px){
+    .home-section {
+        h1 {
+            font-size: 1.5em;
+        }
+    }
+    .social-links {
+        a {
+            font-size: 14px;
+            margin: 10px 2px 6px;
+        }
+    }
+    .website-btn {
+        margin-top: 20px;
+    }
 }
 </style>

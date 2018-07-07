@@ -37,6 +37,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+h1 {
+    font-family: 'Source Serif Pro', serif;
+    font-size: 3em;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 30px;
+    color: #000;
+}
 .contact-container {
     position: relative;
     margin: auto;

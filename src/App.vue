@@ -89,7 +89,7 @@ h2 {
 
     .menu {
         opacity: 0;
-        
+        position: absolute !important;
     }
 }
 
@@ -100,6 +100,7 @@ h2 {
     }
     .menu {
         opacity: 1 !important;
+        position: absolute;
     }
     .menu-container {
         opacity: 0;
@@ -122,6 +123,7 @@ h2 {
         opacity: 1;
         display: block;
         pointer-events: all;
+        position: absolute;
         a {
             margin-bottom: 0;
         }
