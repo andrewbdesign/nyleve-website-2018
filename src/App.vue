@@ -52,7 +52,7 @@ body {
 
 .main-section {
     background: #fff;
-    padding: 2em;
+    padding: 2em !important;
     min-height: 80vh;
     margin-bottom: 20vh;
     .button {
@@ -70,10 +70,10 @@ body {
 
 h1 {
     font-family: 'Source Serif Pro', serif;
-    font-size: 3em;
-    font-weight: 700;
+    font-size: 3em !important;
+    font-weight: 700 !important;
     margin: 0;
-    margin-bottom: 30px;
+    margin-bottom: 30px !important;
     color: #000;
 }
 
