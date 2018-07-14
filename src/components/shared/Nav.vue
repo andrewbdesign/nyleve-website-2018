@@ -19,6 +19,7 @@
             <a href="https://open.spotify.com/album/3IRBkwKqdnmsEelVGptGAk" target="_blank">Spotify</a>
             <a href="http://smarturl.it/AnEmptySpaceBetween" target="_blank">Itunes</a>
             <a href="https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO" target="_blank">Soundcloud</a>
+            <p class="email-footer">nylevecontact@gmail.com</p>
 
             
             <!-- USER LOGIN -->
@@ -47,6 +48,7 @@
             <a href="https://open.spotify.com/album/3IRBkwKqdnmsEelVGptGAk" target="_blank">Spotify</a>
             <a href="http://smarturl.it/AnEmptySpaceBetween" target="_blank">Itunes</a>
             <a href="https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO" target="_blank">Soundcloud</a>
+            <p class="email-footer">nylevecontact@gmail.com</p>
             
             <!-- USER LOGIN -->
             <template v-if="userIsAuthenticated">
@@ -141,7 +143,7 @@
         }
         p {
             color: #fff;
-            font-weight: bold;
+            // font-weight: bold; 
         }
         a {
             font-weight: normal;

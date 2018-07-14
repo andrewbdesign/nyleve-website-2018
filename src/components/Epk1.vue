@@ -147,6 +147,7 @@
 					<a v-if="epk.spotify" target="_blank" :href="epk.spotify">Spotify</a> <span v-if="epk.youtube">|</span>
 					<a v-if="epk.youtube" target="_blank" :href="epk.youtube">Youtube</a>
 				</p>
+				<p class="email-footer">nylevecontact@gmail.com</p>
 			</div>
 		</div>
 
@@ -548,6 +549,9 @@ input {
 }
 .submit-links {
 	width: initial;
+}
+.email-footer {
+	text-align: center;
 }
 
 @media (max-width: 845px){
