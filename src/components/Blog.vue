@@ -19,7 +19,7 @@
                             <iframe class="resp-iframe" :src="blog.iframeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                         </div>
                         <template v-for="copy in blog.copy.split('\n')">
-                            <p> {{ copy }}</p>
+                            <p v-html="copy"></p>
                         </template>
                         <hr>
                     </div>
@@ -64,7 +64,7 @@
                                     <iframe class="resp-iframe" :src="editBody.iframeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
                                 <template v-for="copy in editBody.copy.split('\n')">
-                                    <p> {{ copy }}</p>
+                                    <p v-html="copy"></p>
                                 </template>
                             </div>
                         </div>

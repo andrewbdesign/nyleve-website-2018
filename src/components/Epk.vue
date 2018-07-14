@@ -480,7 +480,7 @@ h1 {
 }
 .main-section {
 	margin-bottom: 0;
-	padding: 2em 0;
+	padding: 2em 0 !important;
 }
 .section-copy {
 	padding: 0 2em;

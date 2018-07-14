@@ -120,18 +120,23 @@ export const store = new Vuex.Store({
             console.log('store, updating post', payload)
             let postId = payload.id
             let postObj = {
-                title: payload.title,
-                date: payload.date,
-                copy: payload.copy,
-                image: payload.image,
-                iframeUrl: payload.iframeUrl
+                // title: payload.title,
+                // date: payload.date,
+                // copy: payload.copy,
+                // image: payload.image,
+                // iframeUrl: payload.iframeUrl
             }
+            if (payload.title) { postObj.title = payload.title }
+            if (payload.date) { postObj.date = payload.date }
+            if (payload.copy) { postObj.copy = payload.copy }
+            if (payload.image) { postObj.image = payload.image }
+            if (payload.iframeUrl) { postObj.iframeUrl = payload.iframeUrl }
             let imageUrl
             let hasNoImage = payload.image === null
-            console.log('hasNoImage', hasNoImage)
+            console.log('hasNoImage:', hasNoImage)
 
-            if (hasNoImage) {
-                firebase.database().ref('blogs/' + postId).set(postObj)
+            if (!hasNoImage) {
+                firebase.database().ref('blogs/' + postId).update(postObj)
                     .then(() => {
                         return firebase.database().ref('blogs').once('value')
                     })
