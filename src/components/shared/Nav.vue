@@ -14,6 +14,12 @@
             <router-link to="/videos">Videos</router-link>
             <a href="https://nyleve.bandcamp.com/" target="_blank">Buy</a>
             <router-link to="/contact">Contact</router-link>
+            <hr>
+            <a href="https://www.facebook.com/nylevemusic/" target="_blank">Facebook</a>
+            <a href="https://open.spotify.com/album/3IRBkwKqdnmsEelVGptGAk" target="_blank">Spotify</a>
+            <a href="http://smarturl.it/AnEmptySpaceBetween" target="_blank">Itunes</a>
+            <a href="https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO" target="_blank">Soundcloud</a>
+
             
             <!-- USER LOGIN -->
             <template v-if="userIsAuthenticated">
@@ -35,6 +41,12 @@
             <span @click="videosBtn">Videos</span>
             <a href="https://nyleve.bandcamp.com/" target="_blank">Buy</a>
             <span @click="contactBtn">Contact</span>
+
+            <hr>
+            <a href="https://www.facebook.com/nylevemusic/" target="_blank">Facebook</a>
+            <a href="https://open.spotify.com/album/3IRBkwKqdnmsEelVGptGAk" target="_blank">Spotify</a>
+            <a href="http://smarturl.it/AnEmptySpaceBetween" target="_blank">Itunes</a>
+            <a href="https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO" target="_blank">Soundcloud</a>
             
             <!-- USER LOGIN -->
             <template v-if="userIsAuthenticated">

@@ -183,7 +183,7 @@ h1 {
 }
 
 .button {
-    line-height: 0;
+    line-height: 0 !important;
 }
 
 input, textarea {
@@ -194,7 +194,7 @@ input, textarea {
 }
 
 .img-btn {
-    display: block;
+    display: block !important;
     margin-bottom: 30px;
 }
 

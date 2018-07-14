@@ -1,14 +1,16 @@
 <template>
     <div class="home-section">
-        <h1 v-html="title"></h1>
-        <img class="ep-artwork" src="../../static/ep-artwork.jpg" alt="">
-        <div class="social-links">
-            <a :href="epk.spotify || 'http://google.com'" target="_blank">Spotify</a> |
-            <a :href="epk.bandcamp || 'https://nyleve.bandcamp.com/'" target="_blank">Bandcamp</a> |
-            <a :href="epk.itunes || 'https://www.apple.com/au/itunes/'" target="_blank">Itunes</a> |
-            <a :href="epk.soundcloud || 'https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO'" target="_blank">Soundcloud</a>
+        <div class="container-home">
+            <h1 v-html="title"></h1>
+            <img class="ep-artwork" src="../../static/ep-artwork.jpg" alt="">
+            <div class="social-links">
+                <a :href="epk.spotify || 'http://google.com'" target="_blank">Spotify</a> |
+                <a :href="epk.bandcamp || 'https://nyleve.bandcamp.com/'" target="_blank">Bandcamp</a> |
+                <a :href="epk.itunes || 'https://www.apple.com/au/itunes/'" target="_blank">Itunes</a> |
+                <a :href="epk.soundcloud || 'https://soundcloud.com/nylevemusic/sets/an-empty-space-between/s-C7uUO'" target="_blank">Soundcloud</a>
+            </div>
+            <span @click="mainPageClick" class="button website-btn">Continue to Main Site</span>
         </div>
-        <span @click="mainPageClick" class="button website-btn">Continue to Main Site</span>
     </div>
 </template>
 
@@ -53,6 +55,18 @@ export default {
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Lora');
 @import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700');
+
+.container-home {
+    width: 680px;
+    margin: auto;
+    height: 530px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 body {
     width: 100%;
 }
@@ -98,7 +112,7 @@ body {
         // font-family: 'Markazi Text', serif;
         padding: 0 1em;
         font-size: 3em;
-        margin: 0 auto;
+        margin: 0 auto !important;
         font-weight: 300;
         letter-spacing: .3px;
         color:#fff;
@@ -121,18 +135,23 @@ h1 {
     margin: 0;
 }
 @media (max-width: 1196px){
+
     .home-section {
         h1 {
-            font-size: 2em;
+            // font-size: 2em !important;
         }
     }
 }
 
 
 @media (max-width: 845px){
+    .container-home {
+        width: 360px;
+        height: 530px;
+    }
     .home-section {
         h1 {
-            font-size: 1.5em;
+            font-size: 2em !important;
         }
     }
     .social-links {
